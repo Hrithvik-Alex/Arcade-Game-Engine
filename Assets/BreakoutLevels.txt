@@ -1,0 +1,99 @@
+:level
+
+:block
+:symbol x
+:fillcolor 255 255 0 255
+:hp 1
+
+:width 14
+:height 13
+:layout 13
+
+--xxxxxxxxx---
+-xxxxxxxxxxx--
+xxxxxxxxxxxxx-
+xxxxxxxxxxxxx-
+-xxxxxxxxxxxx-
+--xxxxxxxxxxxx
+------xxxxxxxx
+--xxxxxxxxxxxx
+-xxxxxxxxxxxx-
+xxxxxxxxxxxxx-
+xxxxxxxxxxxxx-
+-xxxxxxxxxxx--
+--xxxxxxxxx---
+
+:level
+
+:block
+:symbol r
+:fillcolor 255 0 0 255
+:hp 1
+
+:block
+:symbol w
+:fillcolor 255 255 255 255
+:hp 2
+
+:block 
+:symbol b
+:fillcolor 0 0 255 255
+:hp 3
+
+:width 14
+:height 14
+:layout 14
+
+------rr------
+-----rrrr-----
+----rrrrrr----
+---rrrrrrrr---
+--rrwbrrwbrr--
+--rrwbrrwbrr--
+--rrwwrrwwrr--
+--rrwwrrwwrr--
+--rrrrrrrrrr--
+--rrrrrrrrrr--
+--rrrrrrrrrr--
+--rrrrrrrrrr--
+--rr--rr--rr--
+--rr--rr--rr--
+
+:level
+
+:block
+:symbol r
+:fillcolor 255 0 0 255
+:hp 1
+
+:block 
+:symbol b
+:fillcolor 153 76 0 255
+:hp 3
+
+:block
+:symbol w
+:fillcolor 255 255 255 255
+:hp -1
+
+:width 14
+:height 17
+:layout 17
+
+-----------bb-
+----------bbb-
+---------bbbb-
+-------bb-b---
+------b---b---
+--rrrb---b----
+-rrrbrr-b-----
+rrrrrr-rbrrr--
+rrrrrr-rbrrrr-
+rrrrr-rrbrrrr-
+rwrrr-rrrrrrr-
+rrwrr-rrrrrrr-
+rrrrr-rrwrrrr-
+rrrrr-rrrwrrr-
+-rrrr-rrrrrrr-
+------rrrrrrr-
+-------rrrrr--

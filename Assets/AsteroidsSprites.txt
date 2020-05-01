@@ -1,0 +1,104 @@
+:sprite
+:key space_ship
+:xPos 0
+:yPos 0
+:width 21
+:height 21
+
+:sprite
+:key small_rock
+:xPos 22
+:yPos 0
+:width 22
+:height 21
+
+:sprite
+:key medium_rock
+:xPos 45
+:yPos 0
+:width 33
+:height 33
+
+:sprite
+:key medium_rock2
+:xPos 81
+:yPos 1
+:width 41
+:height 29
+
+:sprite
+:key explosion_1
+:xPos 0
+:yPos 43
+:width 30
+:height 25
+
+:sprite
+:key explosion_2
+:xPos 31
+:yPos 35
+:width 40
+:height 32
+
+:sprite
+:key big_rock
+:xPos 75
+:yPos 30
+:width 51
+:height 51
+
+:sprite
+:key explosion_3
+:xPos 0
+:yPos 70
+:width 41
+:height 34
+
+:sprite
+:key explosion_4
+:xPos 45
+:yPos 73
+:width 38
+:height 34
+
+:sprite
+:key explosion_5
+:xPos 86
+:yPos 84
+:width 34
+:height 33
+
+:sprite
+:key explosion_6
+:xPos 0
+:yPos 104
+:width 32
+:height 25
+
+:sprite
+:key missile_2
+:xPos 23
+:yPos 23
+:width 8
+:height 10
+
+:sprite
+:key missile_1
+:xPos 32
+:yPos 23
+:width 8
+:height 10
+
+:sprite
+:key thrusters_2
+:xPos 0
+:yPos 28
+:width 9
+:height 8
+
+:sprite
+:key thrusters_1
+:xPos 10
+:yPos 28
+:width 9
+:height 8

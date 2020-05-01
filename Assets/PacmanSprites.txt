@@ -1,0 +1,244 @@
+:sprite
+:key pac_man_closed
+:xPos 0
+:yPos 0
+:width 16
+:height 16
+
+:sprite
+:key pac_man_right_open
+:xPos 16
+:yPos 0
+:width 16
+:height 16
+
+:sprite
+:key pac_man_right_idle
+:xPos 32
+:yPos 0
+:width 16
+:height 16
+
+:sprite
+:key pac_man_explosion
+:xPos 0
+:yPos 16
+:width 16
+:height 16
+
+:sprite
+:key pac_man_left_open
+:xPos 16
+:yPos 16
+:width 16
+:height 16
+
+:sprite
+:key pac_man_left_idle
+:xPos 32
+:yPos 16
+:width 16
+:height 16
+
+:sprite
+:key pac_man_up_open
+:xPos 16
+:yPos 32
+:width 16
+:height 16
+
+:sprite
+:key pac_man_up_idle
+:xPos 32
+:yPos 32
+:width 16
+:height 16
+
+:sprite
+:key pac_man_down_open
+:xPos 16
+:yPos 48
+:width 16
+:height 16
+
+:sprite
+:key pac_man_down_idle
+:xPos 32
+:yPos 48
+:width 16
+:height 16
+
+:sprite
+:key pac_man_death_0
+:xPos 48
+:yPos 0
+:width 16
+:height 16
+
+:sprite
+:key pac_man_death_1
+:xPos 48
+:yPos 16
+:width 16
+:height 16
+
+:sprite
+:key pac_man_death_2
+:xPos 48
+:yPos 32
+:width 16
+:height 16
+
+:sprite
+:key pac_man_death_3
+:xPos 48
+:yPos 48
+:width 16
+:height 16
+
+:sprite
+:key pac_man_death_4
+:xPos 48
+:yPos 64
+:width 16
+:height 16
+
+:sprite
+:key pac_man_death_5
+:xPos 48
+:yPos 80
+:width 16
+:height 16
+
+:sprite
+:key pac_man_death_6
+:xPos 48
+:yPos 96
+:width 16
+:height 16
+
+:sprite
+:key pac_man_death_7
+:xPos 48
+:yPos 112
+:width 16
+:height 16
+
+:sprite
+:key pac_man_death_8
+:xPos 32
+:yPos 64
+:width 16
+:height 16
+
+:sprite
+:key pac_man_empty
+:xPos 32
+:yPos 80
+:width 16
+:height 16
+
+:sprite
+:key ghost_body_0
+:xPos 65
+:yPos 0
+:width 16
+:height 16
+
+:sprite
+:key ghost_body_1
+:xPos 81
+:yPos 0
+:width 16
+:height 16
+
+:sprite
+:key ghost_eyes_right
+:xPos 65
+:yPos 16
+:width 16
+:height 16
+
+:sprite
+:key ghost_eyes_left
+:xPos 81
+:yPos 16
+:width 16
+:height 16
+
+:sprite
+:key ghost_eyes_up
+:xPos 65
+:yPos 32
+:width 16
+:height 16
+
+:sprite
+:key ghost_eyes_down
+:xPos 81
+:yPos 32
+:width 16
+:height 16
+
+:sprite
+:key ghost_vulnerable_face
+:xPos 65
+:yPos 48
+:width 16
+:height 16
+
+:sprite
+:key cherry
+:xPos 0
+:yPos 32
+:width 16
+:height 16
+
+:sprite
+:key strawberry
+:xPos 0
+:yPos 48
+:width 16
+:height 16
+
+:sprite
+:key orange
+:xPos 0
+:yPos 64
+:width 16
+:height 16
+
+:sprite
+:key apple
+:xPos 0
+:yPos 80
+:width 16
+:height 16
+
+:sprite
+:key pineapple
+:xPos 0
+:yPos 96
+:width 16
+:height 16
+
+:sprite
+:key spaceship
+:xPos 0
+:yPos 112
+:width 16
+:height 16
+
+:sprite
+:key bell
+:xPos 16
+:yPos 64
+:width 16
+:height 16
+
+:sprite
+:key key
+:xPos 16
+:yPos 80
+:width 16
+:height 16

@@ -1,0 +1,328 @@
+:sprite
+:key A
+:xPos 1
+:yPos 0
+:width 7
+:height 8
+
+:sprite
+:key B
+:xPos 9
+:yPos 0
+:width 7
+:height 8
+
+:sprite
+:key C
+:xPos 17
+:yPos 0
+:width 7
+:height 8
+
+:sprite
+:key D
+:xPos 25
+:yPos 0
+:width 7
+:height 8
+
+:sprite
+:key E
+:xPos 33
+:yPos 0
+:width 7
+:height 8
+
+:sprite
+:key F
+:xPos 41
+:yPos 0
+:width 7
+:height 8
+
+:sprite
+:key G
+:xPos 49
+:yPos 0
+:width 7
+:height 8
+
+:sprite
+:key H
+:xPos 57
+:yPos 0
+:width 7
+:height 8
+
+:sprite
+:key I
+:xPos 1
+:yPos 9
+:width 7
+:height 8
+
+:sprite
+:key J
+:xPos 9
+:yPos 9
+:width 7
+:height 8
+
+:sprite
+:key K
+:xPos 17
+:yPos 9
+:width 7
+:height 8
+
+:sprite
+:key L
+:xPos 25
+:yPos 9
+:width 7
+:height 8
+
+:sprite
+:key M
+:xPos 33
+:yPos 9
+:width 7
+:height 8
+
+:sprite
+:key N
+:xPos 41
+:yPos 9
+:width 7
+:height 8
+
+:sprite
+:key O
+:xPos 49
+:yPos 9
+:width 7
+:height 8
+
+:sprite
+:key P
+:xPos 57
+:yPos 9
+:width 7
+:height 8
+
+:sprite
+:key Q
+:xPos 1
+:yPos 18
+:width 7
+:height 8
+
+:sprite
+:key R
+:xPos 9
+:yPos 18
+:width 7
+:height 8
+
+:sprite
+:key S
+:xPos 17
+:yPos 18
+:width 7
+:height 8
+
+:sprite
+:key T
+:xPos 25
+:yPos 18
+:width 7
+:height 8
+
+:sprite
+:key U
+:xPos 33
+:yPos 18
+:width 7
+:height 8
+
+:sprite
+:key V
+:xPos 41
+:yPos 18
+:width 7
+:height 8
+
+:sprite
+:key W
+:xPos 49
+:yPos 18
+:width 7
+:height 8
+
+:sprite
+:key X
+:xPos 57
+:yPos 18
+:width 7
+:height 8
+
+:sprite
+:key Y
+:xPos 1
+:yPos 27
+:width 7
+:height 8
+
+:sprite
+:key Z
+:xPos 9
+:yPos 27
+:width 7
+:height 8
+
+:sprite
+:key !
+:xPos 19
+:yPos 27
+:width 3
+:height 8
+
+:sprite
+:key 0
+:xPos 25
+:yPos 27
+:width 7
+:height 8
+
+:sprite
+:key 1
+:xPos 33
+:yPos 27
+:width 7
+:height 8
+
+:sprite
+:key 2
+:xPos 41
+:yPos 27
+:width 7
+:height 8
+
+:sprite
+:key 3
+:xPos 49
+:yPos 27
+:width 7
+:height 8
+
+:sprite
+:key 4
+:xPos 57
+:yPos 27
+:width 7
+:height 8
+
+:sprite
+:key 5
+:xPos 1
+:yPos 36
+:width 7
+:height 8
+
+:sprite
+:key 6
+:xPos 9
+:yPos 36
+:width 7
+:height 8
+
+:sprite
+:key 7
+:xPos 17
+:yPos 36
+:width 7
+:height 8
+
+:sprite
+:key 8
+:xPos 25
+:yPos 36
+:width 7
+:height 8
+
+:sprite
+:key 9
+:xPos 33
+:yPos 36
+:width 7
+:height 8
+
+:sprite
+:key .
+:xPos 41
+:yPos 36
+:width 3
+:height 8
+
+:sprite
+:key ?
+:xPos 45
+:yPos 36
+:width 7
+:height 8
+
+:sprite
+:key %
+:xPos 53
+:yPos 36
+:width 7
+:height 8
+
+:sprite
+:key ,
+:xPos 61
+:yPos 36
+:width 3
+:height 8
+
+:sprite
+:key (
+:xPos 1
+:yPos 45
+:width 3
+:height 8
+
+:sprite
+:key )
+:xPos 5
+:yPos 45
+:width 3
+:height 8
+
+:sprite
+:key +
+:xPos 9
+:yPos 45
+:width 5
+:height 8
+
+:sprite
+:key -
+:xPos 15
+:yPos 45
+:width 5
+:height 8
+
+:sprite
+:key _
+:xPos 21
+:yPos 45
+:width 7
+:height 8
+
+:sprite
+:key =
+:xPos 29
+:yPos 45
+:width 5
+:height 8

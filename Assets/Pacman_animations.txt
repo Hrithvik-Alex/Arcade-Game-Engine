@@ -1,0 +1,69 @@
+:animation move_left
+:sprite_sheet PacmanSprites
+:size 16 16
+:fps 15
+
+:frame_keys 4
+
+pac_man_left_idle
+pac_man_left_open
+pac_man_left_idle
+pac_man_closed
+
+:animation move_right
+:sprite_sheet PacmanSprites
+:size 16 16
+:fps 15
+
+:frame_keys 4
+
+pac_man_right_idle
+pac_man_right_open
+pac_man_right_idle
+pac_man_closed
+
+:animation move_up
+:sprite_sheet PacmanSprites
+:size 16 16
+:fps 15
+
+:frame_keys 4
+
+pac_man_up_idle
+pac_man_up_open
+pac_man_up_idle
+pac_man_closed
+
+:animation move_down
+:sprite_sheet PacmanSprites
+:size 16 16
+:fps 15
+
+:frame_keys 4
+
+pac_man_down_idle
+pac_man_down_open
+pac_man_down_idle
+pac_man_closed
+
+:animation death
+:sprite_sheet PacmanSprites
+:size 16 16
+:fps 12
+
+:frame_keys 13
+
+pac_man_up_idle
+pac_man_up_open
+pac_man_death_0
+pac_man_death_1
+pac_man_death_2
+pac_man_death_3
+pac_man_death_4
+pac_man_death_5
+pac_man_death_6
+pac_man_death_7
+pac_man_death_8
+pac_man_explosion
+pac_man_empty
+

@@ -1,0 +1,51 @@
+:animation ship
+:sprite_sheet AsteroidsSprites
+:size 21 21
+:fps 10
+
+:frame_keys 1
+
+space_ship
+
+:animation explosion
+:sprite_sheet AsteroidsSprites
+:size 42 34
+:fps 8
+
+:frame_keys 6
+
+explosion_1
+explosion_2
+explosion_3
+explosion_4
+explosion_5
+explosion_6
+
+:frame_offsets 6
+
+6 5
+1 1
+0 0
+2 0
+4 0
+5 5
+
+:animation missile
+:sprite_sheet AsteroidsSprites
+:size 8 10
+:fps 5
+
+:frame_keys 2
+
+missile_1
+missile_2
+
+:animation thrusters
+:sprite_sheet AsteroidsSprites
+:size 9 8
+:fps 5
+
+:frame_keys 2
+
+thrusters_1
+thrusters_2
