@@ -27,10 +27,11 @@ void Missile::init() {
 void Missile::update(uint32_t dt) {
     float distance = MilliSecondsToSeconds(dt) * VELOCITY;
     mPosition += mDirection * distance;
+    mSprite.update(dt);
+    mSprite.setPosition(mPosition);
 }
 
 void Missile::draw(Screen& screen) {
-    mSprite.setPosition(mPosition);
     mSprite.draw(screen);
 
 }

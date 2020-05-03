@@ -19,6 +19,7 @@ class SpaceShip {
 public:
 
     SpaceShip();
+    ~SpaceShip();
 
     const Rectangle getBBox() const;
 
@@ -27,15 +28,18 @@ public:
     void draw(Screen& screen);
 
     void fireMissile();
+    inline void setMovement(const bool movement) {mIsMoving = movement;}
 
 
 private:
 
+    static const int SHIP_VELOCITY = 100;
     const Vec2D THRUSTER_OFFSET = {6,21};
     AnimatedSprite mSpaceShipSprite;
     AnimatedSprite mThrusterSprite;
     Vec2D mOffset;
     Vec2D mDirection;
+    bool mIsMoving;
     int mNumMissiles;
     SpriteSheet mSpriteSheet;
     std::vector<Missile*> mCurrentMissiles;

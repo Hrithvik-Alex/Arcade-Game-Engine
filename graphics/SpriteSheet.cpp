@@ -6,6 +6,7 @@
 #include "../Utils/FileCommandLoader.h"
 #include "../Utils/utils.h"
 #include "../App/App.h"
+#include <iostream>
 
 SpriteSheet::SpriteSheet() {
 
@@ -19,9 +20,8 @@ bool SpriteSheet::load(const std::string& name) {
 }
 
 Sprite SpriteSheet::getSprite(const std::string& spriteName) const {
-    size_t length = mSections.size();
 
-    for(size_t i = 0; i < length; ++i) {
+    for(int i = 0; i < mSections.size(); ++i) {
         if(stringCompare(mSections[i].key, spriteName)) {
             return mSections[i].sprite;
         }

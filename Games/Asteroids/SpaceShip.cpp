@@ -6,7 +6,13 @@
 #include "../../App/App.h"
 #include "../../shapes/Rectangle.h"
 
-SpaceShip::SpaceShip(): mNumMissiles(3), mDirection(0,-1) {}
+SpaceShip::SpaceShip(): mNumMissiles(3), mDirection(0,-1), mIsMoving(false) {}
+
+SpaceShip::~SpaceShip() {
+    for(auto& missile : mCurrentMissiles) {
+        delete missile;
+    }
+}
 
 const Rectangle SpaceShip::getBBox() const {
     return Rectangle(mOffset, mSpaceShipSprite.getBBox().getWidth(), mSpaceShipSprite.getBBox().getHeight());
@@ -36,30 +42,43 @@ void SpaceShip::init() {
 void SpaceShip::update(uint32_t dt) {
     mSpaceShipSprite.update(dt);
     mThrusterSprite.update(dt);
-    for(auto missile : mCurrentMissiles) {
-        if(missile) {
-            missile->update(dt);
-            if(missile->getPosition().GetY() < 0) {
-                delete missile;
-            }
-        }
 
+    if(mIsMoving) {
+        float distance = MilliSecondsToSeconds(dt) * SHIP_VELOCITY;
+        mOffset += mDirection * distance;
+        mSpaceShipSprite.setPosition(mOffset);
+        mThrusterSprite.setPosition(mOffset + THRUSTER_OFFSET);
+    }
+
+    auto missileIt = mCurrentMissiles.begin();
+
+    while(missileIt != mCurrentMissiles.end()) {
+        (*missileIt)->update(dt);
+        if((*missileIt)->getPosition().GetY() < 0) {
+            delete (*missileIt);
+            mCurrentMissiles.erase(missileIt);
+            ++mNumMissiles;
+        } else {
+            ++missileIt;
+        }
     }
 }
 
 void SpaceShip::draw(Screen& theScreen) {
     mSpaceShipSprite.draw(theScreen);
-    mThrusterSprite.draw(theScreen);
-    for(auto missile : mCurrentMissiles) {
-        if(missile) missile->draw(theScreen);
+    if(mIsMoving) {
+        mThrusterSprite.draw(theScreen);
+    }
+    for(auto& missile : mCurrentMissiles) {
+        missile->draw(theScreen);
     }
 }
 
 void SpaceShip::fireMissile() {
     if(mNumMissiles > 0) {
-        Missile* mnoptrCurrentMissile = new Missile(mDirection,mOffset);
-        mnoptrCurrentMissile->init();
-        mCurrentMissiles.push_back(mnoptrCurrentMissile);
+        Missile* currentMissile = new Missile(mDirection,mOffset);
+        currentMissile->init();
+        mCurrentMissiles.push_back(currentMissile);
         --mNumMissiles;
     }
 

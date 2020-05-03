@@ -47,6 +47,32 @@ void Asteroids::init(GameController& gameController){
 
     gameController.addInputActionForKey(fireAction);
 
+    ButtonAction moveAction;
+    moveAction.key = GameController::UpKey();
+    moveAction.action = [this](uint32_t dt, InputState state) {
+        if(GameController::IsPressed(state)) {
+            mSpaceShip.setMovement(true);
+        } else {
+            mSpaceShip.setMovement(false);
+        }
+    };
+
+    gameController.addInputActionForKey(moveAction);
+
+//    ButtonAction leftAction;
+//    leftAction.key = GameController::LeftKey();
+//    leftAction.action = [this](uint32_t dt, InputState state) {
+//        if(GameController::IsPressed(state)) {
+//            mSpaceShip.setMovement(true);
+//        } else {
+//            mSpaceShip.setMovement(false);
+//        }
+//    };
+//
+//    gameController.addInputActionForKey(leftAction);
+
+
+
 }
 
 void Asteroids::update(uint32_t dt){
