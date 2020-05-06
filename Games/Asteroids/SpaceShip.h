@@ -23,12 +23,19 @@ public:
 
     const Rectangle getBBox() const;
 
-    void init();
+    void init(SpriteSheet* spriteSheet);
     void update(uint32_t dt);
     void draw(Screen& screen);
 
     void fireMissile();
     inline void setMovement(const bool movement) {mIsMoving = movement;}
+
+    void explode();
+
+    inline void rotateLeft(const bool rotate) {mRotatingLeft = rotate;}
+    inline void rotateRight(const bool rotate) {mRotatingRight = rotate;}
+
+    bool missileHit(const Rectangle& bbox);
 
 
 private:
@@ -40,8 +47,11 @@ private:
     Vec2D mOffset;
     Vec2D mDirection;
     bool mIsMoving;
+    bool mRotatingRight;
+    bool mRotatingLeft;
+    bool mIsExplosion;
     int mNumMissiles;
-    SpriteSheet mSpriteSheet;
+    SpriteSheet* mSpriteSheet;
     std::vector<Missile*> mCurrentMissiles;
 };
 

@@ -20,7 +20,7 @@ public:
 
     const Rectangle getBBox() const;
 
-    void init();
+    void init(SpriteSheet* spriteSheet);
     void update(uint32_t dt);
     void draw(Screen& screen);
 
@@ -31,7 +31,7 @@ private:
     Vec2D mDirection;
     Vec2D mPosition;
     AnimatedSprite mSprite;
-    SpriteSheet mSpriteSheet;
+    SpriteSheet* mSpriteSheet;
 
 };
 

@@ -3,6 +3,8 @@
 //
 
 #include "utils.h"
+#include "vec2D.h"
+#include "../App/App.h"
 #include <cmath>
 #include <algorithm>
 #include <cctype>
@@ -44,4 +46,11 @@ float Clamp(float val, float min, float max) {
         return min;
     }
     return val;
+}
+
+bool outOfBounds(const Vec2D& vec) {
+    if(vec.GetY() < 0 || vec.GetY() > App::Singleton().height() || vec.GetX() < 0 || vec.GetX() > App::Singleton().width()) {
+        return true;
+    }
+    return false;
 }

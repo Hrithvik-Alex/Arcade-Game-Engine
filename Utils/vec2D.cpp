@@ -92,9 +92,9 @@ Vec2D& Vec2D::Normalize() {
     if(mag > EPSILON) {
         *this /= Mag();
 
-    } else {
-        return *this;
     }
+    return *this;
+
 }
 
 float Vec2D::Distance(const Vec2D& vec) const {
