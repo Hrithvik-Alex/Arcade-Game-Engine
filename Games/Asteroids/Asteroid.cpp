@@ -23,14 +23,17 @@ void Asteroid::init(SpriteSheet* spriteSheet) {
     switch (mAsteroidSize) {
         case SMALL: {
             mSpriteName = "small_rock";
+            mPoints = 100;
             break;
         }
         case MEDIUM: {
             mSpriteName = "medium_rock";
+            mPoints = 50;
             break;
         }
         case LARGE: {
             mSpriteName = "big_rock";
+            mPoints = 20;
             break;
         }
     }

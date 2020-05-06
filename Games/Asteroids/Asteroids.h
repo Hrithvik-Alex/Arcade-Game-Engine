@@ -9,11 +9,13 @@
 #include "../../graphics/SpriteSheet.h"
 #include "SpaceShip.h"
 #include "Asteroid.h"
+#include "../Score.h"
 #include <vector>
 
 class Asteroids: public Game {
 public:
 
+    Asteroids();
     ~Asteroids();
 
     virtual void init(GameController& gameController) override;
@@ -37,6 +39,8 @@ private:
     SpaceShip mSpaceShip;
     std::vector<Asteroid*> mAsteroids;
     SpriteSheet mSpriteSheet;
+
+    Score mScore;
 };
 
 

@@ -35,6 +35,8 @@ public:
 
     bool isInitialized() const {return mSpriteName != "";}
 
+    inline int getPoints() {return mPoints;}
+
 private:
 
     Vec2D calculateRandomStart();
@@ -45,6 +47,8 @@ private:
     Vec2D mPosition;
     std::string mSpriteName;
     SpriteSheet* mSpriteSheet;
+
+    int mPoints;
 
     bool isCenter;
 };

@@ -33,6 +33,7 @@
  *
  * */
 
+ Asteroids::Asteroids(): mScore(Rectangle(Vec2D(App::Singleton().width()-50,10), 40, 20), App::Singleton().getFont()) {}
 
 Asteroids::~Asteroids() {
     for(auto& asteroid : mAsteroids) {
@@ -49,6 +50,7 @@ void Asteroids::init(GameController& gameController){
     mSpriteSheet.load("AsteroidsSprites");
 
     mSpaceShip.init(&mSpriteSheet);
+
 
     ButtonAction fireAction;
     fireAction.key = GameController::ActionKey();
@@ -142,6 +144,9 @@ void Asteroids::update(uint32_t dt){
                 newAsteroid->init(&mSpriteSheet);
                 mAsteroids.push_back(newAsteroid);
             }
+
+            mScore.addToScore(mAsteroids[i]->getPoints());
+
             delete mAsteroids[i];
             mAsteroids[i] = nullptr;
         }
@@ -157,6 +162,7 @@ void Asteroids::update(uint32_t dt){
 
 void Asteroids::draw(Screen& screen){
     mSpaceShip.draw(screen);
+    mScore.draw(screen);
     for(auto& asteroid : mAsteroids) {
         asteroid->draw(screen);
     }
@@ -175,6 +181,7 @@ const std::string& Asteroids::getName() const {
 
 void Asteroids::resetGame() {
     mLives = NUM_LIVES;
+    mScore.resetScore();
 }
 
 void Asteroids::reduceLife() {
