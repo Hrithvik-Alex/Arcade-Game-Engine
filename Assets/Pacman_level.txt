@@ -1,0 +1,184 @@
+:bg_image pacman_level.bmp
+
+:tile 
+:tile_symbol w
+:tile_collision 1
+:tile_width 8
+
+:tile
+:tile_symbol -
+:tile_collision 0
+:tile_width 8
+
+:tile
+:tile_symbol o
+:tile_collision 0
+:tile_width 8
+:tile_exclude_pellet 1
+
+:tile
+:tile_symbol b
+:tile_collision 0
+:tile_width 8
+:tile_exclude_pellet 1
+:tile_blinky_spawn_point 1
+:tile_offset -5 0
+
+:tile
+:tile_symbol m
+:tile_collision 0
+:tile_width 8
+:tile_exclude_pellet 1
+:tile_pinky_spawn_point 1
+:tile_offset 0 0
+
+:tile
+:tile_symbol k
+:tile_collision 0
+:tile_width 8
+:tile_exclude_pellet 1
+:tile_inky_spawn_point 1
+:tile_offset -1 0
+
+:tile
+:tile_symbol c
+:tile_collision 0
+:tile_width 8
+:tile_exclude_pellet 1
+:tile_clyde_spawn_point 1
+:tile_offset 0 0
+
+:tile
+:tile_symbol i
+:tile_collision 0
+:tile_width 8
+:tile_item_spawn_point 1
+:tile_offset -4 0
+:tile_exclude_pellet 1
+
+:tile
+:tile_symbol e
+:tile_collision 0
+:tile_width 4
+
+:tile
+:tile_symbol s
+:tile_collision 1
+:tile_width 4
+
+:tile
+:tile_symbol g
+:tile_collision 1
+:tile_width 8
+:tile_is_gate 1
+
+:tile
+:tile_symbol p
+:tile_collision 0
+:tile_width 8
+:tile_pacman_spawn_point 1
+:tile_offset -4 0
+:tile_exclude_pellet 1
+
+:tile
+:tile_symbol t
+:tile_collision 0
+:tile_width 8
+:tile_is_teleport_tile 1
+:tile_teleport_to_symbol y
+:tile_offset 16 0
+
+:tile
+:tile_symbol y
+:tile_collision 0
+:tile_width 8
+:tile_is_teleport_tile 1
+:tile_teleport_to_symbol t
+:tile_offset -16 0
+
+:tile_height 8
+
+:layout_offset -32 20
+
+:layout 32
+
+ooooswwwwwwwwwwwwwwwwwwwwwwwwwwws
+oooos-------------w-------------s
+oooos-------------w-------------s
+oooos--www--wwww--w--wwww--www--s
+oooos--www--wwww--w--wwww--www--s
+oooos---------------------------s
+oooos---------------------------s
+oooos--www--w--wwwwwww--w--www--s
+oooos-------w-----w-----w-------s
+oooos-------w-----w-----w-------s
+ooooswwwww--wwwwoowoowwww--wwwwws
+ooooeoooow--wooooobooooow--wooooe
+ooooeoooow--wooooooooooow--wooooe
+wwwwswwwww--wooswwggwwsoow--wwwwwswww
+toooeooooo--oooskomocosooo--oooooeooy
+ooooeooooo--ooosoooooosooo--oooooeooo
+wwwwswwwww--wooswwwwwwsoow--wwwwwswww
+ooooeoooow--woooooiooooow--wooooe
+ooooeoooow--wooooooooooow--wooooe
+ooooswwwww--woowwwwwwwoow--wwwwws
+oooos-------------w-------------s
+oooos-------------w-------------s
+oooos--www--wwww--w--wwww--www--s
+oooos----w--------p--------w----s
+oooos----w--------o--------w----s
+oooosww--w--w--wwwwwww--w--w--wws
+oooos-------w-----w-----w-------s
+oooos-------w-----w-----w-------s
+oooos--wwwwwwwww--w--wwwwwwwww--s
+oooos---------------------------s
+oooos---------------------------s
+ooooswwwwwwwwwwwwwwwwwwwwwwwwwwws
+
+:bonus_item
+:bonus_item_sprite_name cherry
+:bonus_item_score 100
+:bonus_item_begin_level 1
+:bonus_item_end_level 1
+
+:bonus_item
+:bonus_item_sprite_name strawberry
+:bonus_item_score 300
+:bonus_item_begin_level 2
+:bonus_item_end_level 2
+
+:bonus_item
+:bonus_item_sprite_name orange
+:bonus_item_score 500
+:bonus_item_begin_level 3
+:bonus_item_end_level 4
+
+:bonus_item
+:bonus_item_sprite_name apple
+:bonus_item_score 700
+:bonus_item_begin_level 5
+:bonus_item_end_level 6
+
+:bonus_item
+:bonus_item_sprite_name pineapple
+:bonus_item_score 1000
+:bonus_item_begin_level 7
+:bonus_item_end_level 8
+
+:bonus_item
+:bonus_item_sprite_name spaceship
+:bonus_item_score 2000
+:bonus_item_begin_level 9
+:bonus_item_end_level 10
+
+:bonus_item
+:bonus_item_sprite_name bell
+:bonus_item_score 3000
+:bonus_item_begin_level 11
+:bonus_item_end_level 12
+
+:bonus_item
+:bonus_item_sprite_name key
+:bonus_item_score 5000
+:bonus_item_begin_level 13
+:bonus_item_end_level 256

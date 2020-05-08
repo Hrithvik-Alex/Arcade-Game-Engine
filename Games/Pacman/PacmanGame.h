@@ -6,6 +6,7 @@
 #define LINES_PACMANGAME_H
 
 #include "../Game.h"
+#include "PacmanLevel.h"
 
 class PacmanGame: public Game {
 public:
@@ -14,6 +15,7 @@ public:
     void draw(Screen& screen) override;
     const std::string& getName() const override;
 private:
+    PacmanLevel mLevel;
 };
 
 
