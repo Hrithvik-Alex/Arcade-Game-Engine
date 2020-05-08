@@ -29,7 +29,7 @@ public:
     bool intersects(const Rectangle& otherRect) const;
     bool contains(const Vec2D& point) const;
 
-    static Rectangle inset(const Rectangle& rect, Vec2D& insets);
+    static Rectangle inset(const Rectangle& rect, const Vec2D& insets);
 
     virtual std::vector<Vec2D> getPoints() const override;
 };

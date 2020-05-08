@@ -48,7 +48,7 @@ bool Rectangle::contains(const Vec2D& point) const {
     return withinX && withinY;
 }
 
-Rectangle Rectangle::inset(const Rectangle& rect, Vec2D& insets) {
+Rectangle Rectangle::inset(const Rectangle& rect,const Vec2D& insets) {
     return Rectangle(rect.getTopLeftPoint() + insets, Vec2D(rect.getWidth() - 2*insets.GetX(), rect.getHeight() - 2*insets.GetY()));
 }
 
