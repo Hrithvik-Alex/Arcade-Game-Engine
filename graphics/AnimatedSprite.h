@@ -21,7 +21,7 @@ public:
     AnimatedSprite();
     void init(const std::string& animationsPath, const SpriteSheet& spriteSheet, const Color& color = Color::White());
     void update(uint32_t dt);
-    void draw(Screen& theScreen);
+    void draw(Screen& theScreen, bool rotate = false, float angle = 0.0f);
 
     void setAnimation(const std::string& animationName, bool looped);
     Vec2D size() const;

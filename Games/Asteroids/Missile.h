@@ -16,7 +16,7 @@ class Missile {
 public:
 
     Missile();
-    Missile(const Vec2D direction, const Vec2D position);
+    Missile(const Vec2D direction, const Vec2D position, float angle = 0.0f);
 
     const Rectangle getBBox() const;
 
@@ -27,9 +27,10 @@ public:
     inline const Vec2D getPosition() const {return mPosition;}
 
 private:
-    static const int VELOCITY = 100;
+    static const int VELOCITY = 200;
     Vec2D mDirection;
     Vec2D mPosition;
+    float mAngle;
     AnimatedSprite mSprite;
     SpriteSheet* mSpriteSheet;
 

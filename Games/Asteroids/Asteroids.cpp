@@ -111,8 +111,8 @@ void Asteroids::init(GameController& gameController){
 }
 
 void Asteroids::update(uint32_t dt){
-    mSpaceShip.update(dt);
     currentDt += dt;
+    mSpaceShip.update(dt);
     if(currentDt >= ASTEROID_SPAWN_RATE) {
         Asteroid* asteroid = new Asteroid();
         asteroid->init(&mSpriteSheet);

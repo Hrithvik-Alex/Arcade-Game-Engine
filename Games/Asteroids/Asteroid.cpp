@@ -52,12 +52,13 @@ void Asteroid::init(SpriteSheet* spriteSheet) {
 void Asteroid::update(uint32_t dt) {
     float distance = MilliSecondsToSeconds(dt) * ASTEROID_VELOCITY;
     mPosition += mDirection * distance;
+    mCurrentAngle += 0.001f * static_cast<float>(dt);
 }
 
 void Asteroid::draw(Screen& screen) {
-    // temp
     assert(mSpriteName != "");
-    screen.Draw(*mSpriteSheet, mSpriteName, mPosition);
+    Vec2D centerSprite = Vec2D(mSpriteSheet->getSprite(mSpriteName).width/2, mSpriteSheet->getSprite(mSpriteName).height/2) + mPosition;
+    screen.Draw(*mSpriteSheet, mSpriteName, mPosition, Color::White(), true, mCurrentAngle, centerSprite);
 }
 
 Vec2D Asteroid::calculateRandomStart() {

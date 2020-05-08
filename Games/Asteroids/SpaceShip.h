@@ -37,11 +37,10 @@ public:
 
     bool missileHit(const Rectangle& bbox);
 
-
 private:
 
     static const int SHIP_VELOCITY = 100;
-    const Vec2D THRUSTER_OFFSET = {6,21};
+    const Vec2D THRUSTER_OFFSET = {0,10.5};
     AnimatedSprite mSpaceShipSprite;
     AnimatedSprite mThrusterSprite;
     Vec2D mOffset;
@@ -51,6 +50,7 @@ private:
     bool mRotatingLeft;
     bool mIsExplosion;
     int mNumMissiles;
+    float mCurrentAngle;
     SpriteSheet* mSpriteSheet;
     std::vector<Missile*> mCurrentMissiles;
 };

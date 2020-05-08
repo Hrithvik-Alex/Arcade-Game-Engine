@@ -5,6 +5,7 @@
 #include "AnimatedSprite.h"
 #include "../shapes/Rectangle.h"
 #include "Screen.h"
+#include "SpriteSheet.h"
 
 AnimatedSprite::AnimatedSprite():mPosition(Vec2D::Zero), mnoptrSpriteSheet(nullptr) {}
 
@@ -18,7 +19,7 @@ void AnimatedSprite::update(uint32_t dt) {
     mAnimationPlayer.update(dt);
 }
 
-void AnimatedSprite::draw(Screen& theScreen) {
+void AnimatedSprite::draw(Screen& theScreen, bool rotate, float angle) {
     AnimationFrame frame = mAnimationPlayer.getCurrentAnimationFrame();
 
     Color frameColor = frame.frameColor;
@@ -27,7 +28,14 @@ void AnimatedSprite::draw(Screen& theScreen) {
         frameColor = mColor;
     }
 
-    theScreen.Draw(*mnoptrSpriteSheet, frame.frame, mPosition + frame.offset, frameColor);
+    if(rotate) {
+        Sprite currentSprite = mnoptrSpriteSheet->getSprite(frame.frame);
+        Vec2D centerOfSprite = mPosition + frame.offset + Vec2D(currentSprite.width/2,currentSprite.height/2);
+        theScreen.Draw(*mnoptrSpriteSheet, frame.frame, mPosition + frame.offset, frameColor, true, angle, centerOfSprite);
+    } else {
+        theScreen.Draw(*mnoptrSpriteSheet, frame.frame, mPosition + frame.offset, frameColor);
+    }
+
 
     if(frame.overlay.size() > 0) {
         theScreen.Draw(*mnoptrSpriteSheet, frame.overlay, mPosition + frame.offset, frame.overlayColor);

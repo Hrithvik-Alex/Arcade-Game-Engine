@@ -10,7 +10,7 @@
 
 Missile::Missile(): Missile(Vec2D(0,-1), Vec2D(App::Singleton().width(), App::Singleton().height())) {}
 
-Missile::Missile(const Vec2D direction, const Vec2D position): mDirection(direction), mPosition(position), mSpriteSheet(nullptr) {}
+Missile::Missile(const Vec2D direction, const Vec2D position, float angle): mDirection(direction), mPosition(position), mSpriteSheet(nullptr), mAngle(angle) {}
 
 const Rectangle Missile::getBBox() const {
     return Rectangle(mPosition, mSprite.getBBox().getWidth(), mSprite.getBBox().getHeight());
@@ -32,6 +32,6 @@ void Missile::update(uint32_t dt) {
 }
 
 void Missile::draw(Screen& screen) {
-    mSprite.draw(screen);
+    mSprite.draw(screen, true, mAngle);
 
 }

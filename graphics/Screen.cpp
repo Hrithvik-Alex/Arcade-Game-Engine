@@ -140,7 +140,7 @@ void Screen::clearScreen() {
     }
 }
 
-void Screen::fillPoly(const std::vector<Vec2D>& points, FillPolyFunc func) {
+void Screen::fillPoly(const std::vector<Vec2D>& points, FillPolyFunc func, bool rotate, float rotateAngle, Vec2D centerPoint) {
     if(points.size() > 0) {
         float top = points[0].GetY();
         float bottom = points[0].GetY();
@@ -201,7 +201,14 @@ void Screen::fillPoly(const std::vector<Vec2D>& points, FillPolyFunc func) {
                     }
 
                     for(int pixelX = round(nodeXVec[k]); pixelX < round(nodeXVec[k+1]); ++pixelX) {
-                        Draw(pixelX, pixelY, func(pixelX, pixelY));
+                        if(rotate) {
+                            Vec2D currentPoint = {static_cast<float>(pixelX), static_cast<float>(pixelY)};
+                            Vec2D rotatedPoint = currentPoint.RotateResult(rotateAngle, centerPoint);
+                            Draw(rotatedPoint, func(pixelX, pixelY));
+
+                        } else {
+                            Draw(pixelX, pixelY, func(pixelX, pixelY));
+                        }
                     }
                 }
             }
@@ -221,7 +228,7 @@ void Screen::Draw(int x, int y, const Color& color) {
 }
 void Screen::Draw(const Vec2D& vec, const Color& color) {
     if(win) {
-        backBuf.SetPixel(color, vec.GetX(), vec.GetY());
+        backBuf.SetPixel(color, round(vec.GetX()), round(vec.GetY()));
     }
 }
 
@@ -345,7 +352,7 @@ void Screen::Draw(const Circle& circle, const Color& color,  bool fill, const Co
 
 }
 
-void Screen::Draw(const BMPImage& image, const Sprite& sprite, const Vec2D& pos, const Color& overlayColor) {
+void Screen::Draw(const BMPImage& image, const Sprite& sprite, const Vec2D& pos, const Color& overlayColor, bool rotate, float rotateAngle, Vec2D centerPoint) {
 
     float rVal = static_cast<float>(overlayColor.GetRed()) / 255.0f;
     float gVal = static_cast<float>(overlayColor.GetGreen()) / 255.0f;
@@ -388,12 +395,12 @@ void Screen::Draw(const BMPImage& image, const Sprite& sprite, const Vec2D& pos,
         return newColor;
 
 
-    });
+    }, rotate, rotateAngle, centerPoint);
 
 }
 
-void Screen::Draw(const SpriteSheet& ss, const std::string& spriteName, const Vec2D& pos, const Color& overlayColor) {
-    Draw(ss.getBMPImage(), ss.getSprite(spriteName),pos,overlayColor);
+void Screen::Draw(const SpriteSheet& ss, const std::string& spriteName, const Vec2D& pos, const Color& overlayColor, bool rotate, float rotateAngle, Vec2D centerPoint) {
+    Draw(ss.getBMPImage(), ss.getSprite(spriteName),pos,overlayColor,rotate,rotateAngle,centerPoint);
 }
 
 void Screen::Draw(const BitmapFont& font, const std::string& textLine, const Vec2D& pos, const Color& overlayColor) {

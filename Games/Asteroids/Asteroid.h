@@ -49,8 +49,10 @@ private:
     SpriteSheet* mSpriteSheet;
 
     int mPoints;
+    float mCurrentAngle;
 
     bool isCenter;
+
 };
 
 

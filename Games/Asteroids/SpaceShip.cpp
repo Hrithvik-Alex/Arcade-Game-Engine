@@ -7,7 +7,7 @@
 #include "../../shapes/Rectangle.h"
 #include "../../Utils/utils.h"
 
-SpaceShip::SpaceShip(): mNumMissiles(3), mDirection(0,-1), mIsMoving(false), mIsExplosion(false), mSpriteSheet(nullptr) {}
+SpaceShip::SpaceShip(): mNumMissiles(3), mCurrentAngle(0), mDirection(0,-1), mIsMoving(false), mRotatingRight(false), mRotatingLeft(false), mIsExplosion(false), mSpriteSheet(nullptr) {}
 
 SpaceShip::~SpaceShip() {
     for(auto& missile : mCurrentMissiles) {
@@ -33,8 +33,10 @@ void SpaceShip::init(SpriteSheet* spriteSheet) {
 
     mSpaceShipSprite.setPosition(spaceshipCenter);
 
-    mThrusterSprite.setPosition(spaceshipCenter);
-    mThrusterSprite.moveBy(THRUSTER_OFFSET);
+    std::cout << mSpaceShipSprite.getBBox().getCenter() << std::endl;
+    Vec2D thrusterPosition = THRUSTER_OFFSET + mSpaceShipSprite.getBBox().getCenter();
+
+    mThrusterSprite.setPosition(thrusterPosition);
 
     mOffset = spaceshipCenter;
 }
@@ -43,30 +45,37 @@ void SpaceShip::update(uint32_t dt) {
     mSpaceShipSprite.update(dt);
     mThrusterSprite.update(dt);
 
+
+    float deltaRotate = 0.005f * static_cast<float>(dt);
+
+    if(mRotatingLeft) {
+        mCurrentAngle -= deltaRotate;
+        mDirection =  Vec2D(0,-1).RotateResult(mCurrentAngle,Vec2D::Zero);
+    }
+
+    if(mRotatingRight) {
+        mCurrentAngle += deltaRotate;
+        mDirection =  Vec2D(0,-1).RotateResult(mCurrentAngle,Vec2D::Zero);
+    }
+
+
     if(mIsMoving && !mIsExplosion) {
         float distance = MilliSecondsToSeconds(dt) * SHIP_VELOCITY;
         mOffset += mDirection * distance;
         mSpaceShipSprite.setPosition(mOffset);
-        mThrusterSprite.setPosition(mOffset + THRUSTER_OFFSET);
+        mThrusterSprite.setPosition((mSpaceShipSprite.getBBox().getCenter() + THRUSTER_OFFSET).RotateResult(mCurrentAngle,getBBox().getCenter()));
 
         if(mOffset.GetX() < 0) {
             mOffset += Vec2D(App::Singleton().width(), 0);
         } else if(mOffset.GetX() > App::Singleton().width()) {
             mOffset -= Vec2D(App::Singleton().width(), 0);
         }
+
         if(mOffset.GetY() < 0) {
             mOffset += Vec2D(0,App::Singleton().height());
         } else if(mOffset.GetY() > App::Singleton().height()) {
             mOffset -= Vec2D(0,App::Singleton().height());
         }
-    }
-
-    if(mRotatingLeft) {
-        mDirection.Rotate(-10*dt,Vec2D::Zero);
-    }
-
-    if(mRotatingRight) {
-        mDirection.Rotate(10*dt,Vec2D::Zero);
     }
 
     if (mIsExplosion) {
@@ -92,9 +101,14 @@ void SpaceShip::update(uint32_t dt) {
 }
 
 void SpaceShip::draw(Screen& theScreen) {
-    mSpaceShipSprite.draw(theScreen);
+    if(mIsExplosion) {
+        mSpaceShipSprite.draw(theScreen);
+    } else {
+        mSpaceShipSprite.draw(theScreen, true, mCurrentAngle);
+    }
+
     if(mIsMoving && !mIsExplosion) {
-        mThrusterSprite.draw(theScreen);
+        mThrusterSprite.draw(theScreen, true, mCurrentAngle);
     }
     for(auto& missile : mCurrentMissiles) {
         missile->draw(theScreen);
@@ -104,7 +118,7 @@ void SpaceShip::draw(Screen& theScreen) {
 void SpaceShip::fireMissile() {
     if(!mIsExplosion) {
         if(mNumMissiles > 0) {
-            Missile* currentMissile = new Missile(mDirection,mOffset);
+            Missile* currentMissile = new Missile(mDirection,mOffset,mCurrentAngle);
             currentMissile->init(mSpriteSheet);
             mCurrentMissiles.push_back(currentMissile);
             --mNumMissiles;
@@ -119,6 +133,7 @@ void SpaceShip::explode() {
     mNumMissiles = 3;
     mDirection = Vec2D(0,-1);
     mOffset += Vec2D(-5,-5);
+    mCurrentAngle = 0;
 }
 
 bool SpaceShip::missileHit(const Rectangle& bbox) {
