@@ -14,6 +14,7 @@
 #include "../Games/BreakOut/BreakOut.h"
 #include "../Games/Tetris/Tetris.h"
 #include "../Games/Asteroids/Asteroids.h"
+#include "Pacman/PacmanStartScene.h"
 
 ArcadeScene::ArcadeScene():ButtonOptionsScene({"Tetris", "Break Out!", "Asteroids", "!Pac-man"}, Color::Cyan()) {}
 
@@ -40,21 +41,15 @@ ArcadeScene::ArcadeScene():ButtonOptionsScene({"Tetris", "Break Out!", "Asteroid
 
      ButtonOptionsScene::init();
 
-     {
-         mSpriteSheet.load("PacmanSprites");
-         mSprite.init(App::Singleton().getBasePath() + "../Assets/Pacman_animations.txt", mSpriteSheet);
-         mSprite.setAnimation("death", true);
-     }
+
 }
 
  void ArcadeScene::update(uint32_t dt) {
-    mSprite.update(dt);
 }
 
  void ArcadeScene::draw(Screen& theScreen) {
     ButtonOptionsScene::draw(theScreen);
 
-    mSprite.draw(theScreen);
 }
 
  const std::string& ArcadeScene::getSceneName() const {
@@ -90,7 +85,7 @@ std::unique_ptr<Scene> ArcadeScene::getScene(eGame game) {
         }
 
         case PACMAN: {
-
+            return std::make_unique<PacmanStartScene>();
         }
     }
 

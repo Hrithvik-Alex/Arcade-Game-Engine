@@ -6,7 +6,6 @@
 #define LINES_ARCADESCENE_H
 
 #include "ButtonOptionsScene.h"
-#include "../graphics/AnimatedSprite.h"
 #include <memory>
 
 enum eGame {
@@ -28,8 +27,6 @@ public:
 private:
     std::unique_ptr<Scene> getScene(eGame game);
 
-    AnimatedSprite mSprite;
-    SpriteSheet mSpriteSheet;
 };
 
 
