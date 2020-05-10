@@ -4,15 +4,68 @@
 
 
 #include "PacmanLevel.h"
+#include "Pacman.h"
 #include "../../Utils/FileCommandLoader.h"
 #include "../../graphics/Screen.h"
+#include "../../App/App.h"
+#include "../../shapes/Circle.h"
+#include <cassert>
 
-bool PacmanLevel::init(const std::string& levelPath) {
-    return loadLevel(levelPath);
+namespace {
+    const uint32_t NUM_LEVELS = 256;
+}
+
+bool PacmanLevel::init(const std::string& levelPath, Pacman* noptrPacman) {
+    mCurrentLevel = 0;
+    mnoptrPacman = noptrPacman;
+
+    bool levelLoaded = loadLevel(levelPath);
+    if(levelLoaded) {
+        resetLevel();
+    }
+
+    return levelLoaded;
 }
 
 void PacmanLevel::update(uint32_t dt) {
+    for(const auto& wall : mWalls) {
+        BoundaryEdge edge;
 
+        if(wall.hasCollided(mnoptrPacman->getBoundingBox(), edge)){
+            Vec2D offset = wall.getCollisionOffset(mnoptrPacman->getBoundingBox());
+            mnoptrPacman->moveBy(offset);
+            mnoptrPacman->stop();
+        }
+    }
+
+    for(Tile t : mTiles) {
+        if(t.isTeleportTile) {
+            Rectangle teleportTileBB(t.position, t.width, static_cast<float>(mTileHeight));
+
+            Tile* teleportToTile = getTileForSymvbol(t.teleportToSymbol);
+            assert(teleportToTile);
+
+            if(teleportToTile->isTeleportTile && teleportTileBB.intersects(mnoptrPacman->getBoundingBox())) {
+                mnoptrPacman->moveTo(teleportToTile->position + teleportToTile->offset);
+            }
+
+        }
+    }
+
+    for(auto& pellet : mPelllets) {
+        if(!pellet.eaten) {
+            if(mnoptrPacman->getBoundingBox().intersects(pellet.mBBox)) {
+                pellet.eaten = true;
+
+                mnoptrPacman->ateItem(pellet.score);
+
+                if(pellet.powerPellet) {
+                    mnoptrPacman->resetGhostEatenMultiplier();
+                    //TODO: make ghosts go vulnerable
+                }
+            }
+        }
+    }
 }
 
 void PacmanLevel::draw(Screen& screen) {
@@ -20,6 +73,135 @@ void PacmanLevel::draw(Screen& screen) {
     // wall debug
     for(const auto& wall: mWalls) {
         screen.Draw(wall.getRectangle(), Color::Blue());
+    }
+
+    for(const auto& pellet: mPelllets) {
+        if(!pellet.eaten) {
+            if(!pellet.powerPellet) {
+                screen.Draw(pellet.mBBox, Color::White());
+            } else {
+                Circle c(pellet.mBBox.getCenter(), pellet.mBBox.getWidth()/2.0f);
+                screen.Draw(c, Color::White(), true, Color::White());
+            }
+        }
+    }
+}
+
+bool PacmanLevel::willCollide(const Rectangle& bbox, PacmanMovement direction) const {
+    Rectangle box = bbox;
+    box.MoveBy(getMovementVector(direction));
+    for(const auto& wall : mWalls) {
+        BoundaryEdge edge;
+
+        if(wall.hasCollided(bbox, edge)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void PacmanLevel::resetLevel() {
+    resetPellets();
+
+    if(mnoptrPacman) {
+        mnoptrPacman->moveTo(mPacmanSpawnLocation);
+        mnoptrPacman->resetToFirstAnimation();
+    }
+}
+
+bool PacmanLevel::isLevelOver() const {
+    return hasEatenAllPellets();
+}
+
+void PacmanLevel::increaseLevel() {
+    ++mCurrentLevel;
+
+    if(mCurrentLevel > NUM_LEVELS) {
+        mCurrentLevel = 1;
+    }
+
+    resetLevel();
+}
+
+void PacmanLevel::resetToFirstLevel() {
+    mCurrentLevel = 1;
+    resetLevel();
+}
+
+bool PacmanLevel::hasEatenAllPellets() const {
+    return numPelletsEaten() >= mPelllets.size() - 4; // 4 super pellets
+}
+
+size_t PacmanLevel::numPelletsEaten() const {
+    size_t numEaten = 0;
+
+    for(const auto& pellet : mPelllets) {
+        if(!pellet.powerPellet && pellet.eaten) {
+            ++numEaten;
+        }
+    }
+    return numEaten;
+}
+
+void PacmanLevel::resetPellets() {
+    mPelllets.clear();
+
+    const uint32_t PELLET_SIZE = 2;
+    const uint32_t PADDING = static_cast<uint32_t>(mTileHeight);
+
+    uint32_t startY = mLayoutOffset.GetY() + PADDING + mTileHeight - 1;
+    uint32_t startX = PADDING + 3;
+
+    const uint32_t LEVEL_HEIGHT = mLayoutOffset.GetY() + 32 * mTileHeight;
+
+    Pellet p;
+    p.score = 10;
+
+    uint32_t row = 0;
+
+    for(uint32_t y = startY; y < LEVEL_HEIGHT; y+= PADDING, ++row) {
+        for(uint32_t x = startX, col = 0; x < App::Singleton().width(); x += PADDING, ++col) {
+            if(row == 0 || row == 22) {
+                if(col == 0 || col == 25) {
+                    p.powerPellet = 1;
+                    p.score = 50;
+                    p.mBBox = Rectangle(Vec2D(x-3,y-3), mTileHeight, mTileHeight);
+                    mPelllets.push_back(p);
+
+                    p.powerPellet = 0;
+                    p.score = 10;
+
+                    continue;
+                }
+            }
+
+            Rectangle rect = Rectangle(Vec2D(x,y), PELLET_SIZE, PELLET_SIZE);
+            bool found = false;
+            for(const Excluder& wall : mWalls) {
+                if(wall.getRectangle().intersects(rect)) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if(!found) {
+                for(const Tile& excludedPelletTile: mExclusionTiles) {
+                    if(excludedPelletTile.excludePelletTile) {
+                        Rectangle tileBB(excludedPelletTile.position, excludedPelletTile.width, mTileHeight);
+                        if(tileBB.intersects(rect)) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if(!found) {
+                p.mBBox = rect;
+                mPelllets.push_back(p);
+            }
+
+        }
     }
 }
 
@@ -78,6 +260,46 @@ bool PacmanLevel::loadLevel(const std::string& levelPath) {
 
     fileCommandLoader.addCommand(layoutOffsetCommand);
 
+    Command tileIsTeleportTileCommand;
+    tileIsTeleportTileCommand.command = "tile_is_teleport_tile";
+    tileIsTeleportTileCommand.parseFunc = [this](ParseFuncParams params) {
+        mTiles.back().isTeleportTile = FileCommandLoader::readInt(params);
+    };
+
+    fileCommandLoader.addCommand(tileIsTeleportTileCommand);
+
+    Command tileToTeleportToCommand;
+    tileToTeleportToCommand.command = "tile_teleport_to_symbol";
+    tileToTeleportToCommand.parseFunc = [this](ParseFuncParams params) {
+        mTiles.back().teleportToSymbol = FileCommandLoader::readChar(params);
+    };
+
+    fileCommandLoader.addCommand(tileToTeleportToCommand);
+
+    Command tileOffsetCommand;
+    tileOffsetCommand.command = "tile_offset";
+    tileOffsetCommand.parseFunc = [this](ParseFuncParams params) {
+        mTiles.back().offset = FileCommandLoader::readSize(params);
+    };
+
+    fileCommandLoader.addCommand(tileOffsetCommand);
+
+    Command tileExcludePelletCommand;
+    tileExcludePelletCommand.command = "tile_exclude_pellet";
+    tileExcludePelletCommand.parseFunc = [this](ParseFuncParams params) {
+        mTiles.back().excludePelletTile = FileCommandLoader::readInt(params);
+    };
+
+    fileCommandLoader.addCommand(tileExcludePelletCommand);
+
+    Command tilePacmanSpawnPointCommand;
+    tilePacmanSpawnPointCommand.command = "tile_pacman_spawn_point";
+    tilePacmanSpawnPointCommand.parseFunc = [this](ParseFuncParams params) {
+        mTiles.back().pacmanSpawnPoint = FileCommandLoader::readInt(params);
+    };
+
+    fileCommandLoader.addCommand(tilePacmanSpawnPointCommand);
+
     Command layoutCommand;
     layoutCommand.command = "layout";
     layoutCommand.commandType = COMMAND_MULTI_LINE;
@@ -96,6 +318,14 @@ bool PacmanLevel::loadLevel(const std::string& levelPath) {
                 wall.init(Rectangle(Vec2D(startingX, layoutOffset.GetY()), tile->width, static_cast<int>(mTileHeight)));
 
                 mWalls.push_back(wall);
+            }
+
+            if(tile->pacmanSpawnPoint > 0) {
+                mPacmanSpawnLocation = Vec2D(startingX + tile->offset.GetX(), layoutOffset.GetY() + tile->offset.GetY());
+            }
+
+            if(tile->excludePelletTile > 0) {
+                mExclusionTiles.push_back(*tile);
             }
 
             startingX += tile->width;

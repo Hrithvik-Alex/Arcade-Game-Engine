@@ -12,6 +12,7 @@ void Actor::init(const SpriteSheet& spriteSheet, const std::string& animationsPa
     mUpdateSpriteOnUpdate = updateSpriteOnMovement;
     mMovementSpeed = movementSpeed;
     mDelta = Vec2D::Zero;
+    mSprite.setPosition(initialPos);
 }
 void Actor::update(uint32_t dt) {
     if(mMovementDirection != PACMAN_MOVEMENT_NONE) {
@@ -34,11 +35,11 @@ void Actor::update(uint32_t dt) {
             int dy = int(fabsf(mDelta.GetY()));
 
             if(mDelta.GetY() < 0) {
-                mSprite.moveBy(Vec2D(-dy,0));
+                mSprite.moveBy(Vec2D(0,-dy));
                 mDelta.SetY(mDelta.GetY() + dy);
             } else {
-                mSprite.moveBy(Vec2D(dy,0));
-                mDelta.SetX(mDelta.GetY() - dy);
+                mSprite.moveBy(Vec2D(0,dy));
+                mDelta.SetY(mDelta.GetY() - dy);
             }
         }
 

@@ -8,6 +8,9 @@
 #include "../../Utils/vec2D.h"
 #include <vector>
 
+static const int PACMAN_MOVEMENT_SPEED = 50; // per second
+
+
 enum PacmanMovement {
     PACMAN_MOVEMENT_NONE = 0,
     PACMAN_MOVEMENT_UP,
