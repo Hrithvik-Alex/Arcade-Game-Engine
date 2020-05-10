@@ -13,11 +13,17 @@
 
 namespace {
     const uint32_t NUM_LEVELS = 256;
+    const uint32_t SPRITE_HEIGHT = 16;
+    const uint32_t SPRITE_WIDTH = 16;
 }
 
-bool PacmanLevel::init(const std::string& levelPath, Pacman* noptrPacman) {
+bool PacmanLevel::init(const std::string& levelPath, const SpriteSheet* noptrSpriteSheet, Pacman* noptrPacman) {
     mCurrentLevel = 0;
     mnoptrPacman = noptrPacman;
+    mnoptrSpriteSheet = noptrSpriteSheet;
+    mBonusItemSpriteName = "";
+    std::random_device r;
+    mGenerator.seed(r());
 
     bool levelLoaded = loadLevel(levelPath);
     if(levelLoaded) {
@@ -66,6 +72,17 @@ void PacmanLevel::update(uint32_t dt) {
             }
         }
     }
+
+    if(shouldSpawnBonusItem()) {
+        spawnBonusItem();
+    }
+
+    if(mBonusItem.spawned && !mBonusItem.eaten) {
+        if(mnoptrPacman->getEatingBBox().intersects(mBonusItem.bbox)) {
+            mBonusItem.eaten = true;
+            mnoptrPacman->ateItem(mBonusItem.score);
+        }
+    }
 }
 
 void PacmanLevel::draw(Screen& screen) {
@@ -85,6 +102,10 @@ void PacmanLevel::draw(Screen& screen) {
             }
         }
     }
+
+    if(mBonusItem.spawned && !mBonusItem.eaten) {
+        screen.Draw(*mnoptrSpriteSheet, mBonusItemSpriteName, mBonusItem.bbox.getTopLeftPoint());
+    }
 }
 
 bool PacmanLevel::willCollide(const Rectangle& bbox, PacmanMovement direction) const {
@@ -100,8 +121,35 @@ bool PacmanLevel::willCollide(const Rectangle& bbox, PacmanMovement direction) c
     return false;
 }
 
+bool PacmanLevel::shouldSpawnBonusItem() const {
+    auto numEaten = numPelletsEaten();
+
+    return !mBonusItem.spawned && numEaten >= mBonusItem.spawnTime;
+}
+
+void PacmanLevel::spawnBonusItem() {
+
+    mBonusItem.spawned = 1;
+    mBonusItem.eaten = 0;
+}
+
+void PacmanLevel::getBonusItemSpriteName(std::string &spriteName, uint32_t &score) const {
+    for(const auto& properties : mBonusItemProperties) {
+        if(mCurrentLevel >= properties.begin && mCurrentLevel <= properties.end) {
+            spriteName = properties.spriteName;
+            score = properties.score;
+            return;
+        }
+    }
+}
+
 void PacmanLevel::resetLevel() {
     resetPellets();
+
+    std::uniform_int_distribution<size_t> distribution(20, mPelllets.size() - 50);
+    mBonusItem.spawnTime = static_cast<int>(distribution(mGenerator));
+
+    getBonusItemSpriteName(mBonusItemSpriteName, mBonusItem.score);
 
     if(mnoptrPacman) {
         mnoptrPacman->moveTo(mPacmanSpawnLocation);
@@ -124,7 +172,7 @@ void PacmanLevel::increaseLevel() {
 }
 
 void PacmanLevel::resetToFirstLevel() {
-    mCurrentLevel = 1;
+    mCurrentLevel = 13;
     resetLevel();
 }
 
@@ -300,6 +348,14 @@ bool PacmanLevel::loadLevel(const std::string& levelPath) {
 
     fileCommandLoader.addCommand(tilePacmanSpawnPointCommand);
 
+    Command tileItemSpawnPointCommand;
+    tileItemSpawnPointCommand.command = "tile_item_spawn_point";
+    tileItemSpawnPointCommand.parseFunc = [this](ParseFuncParams params) {
+        mTiles.back().itemSpawnPoint = FileCommandLoader::readInt(params);
+    };
+
+    fileCommandLoader.addCommand(tileItemSpawnPointCommand);
+
     Command layoutCommand;
     layoutCommand.command = "layout";
     layoutCommand.commandType = COMMAND_MULTI_LINE;
@@ -322,6 +378,8 @@ bool PacmanLevel::loadLevel(const std::string& levelPath) {
 
             if(tile->pacmanSpawnPoint > 0) {
                 mPacmanSpawnLocation = Vec2D(startingX + tile->offset.GetX(), layoutOffset.GetY() + tile->offset.GetY());
+            } else if(tile->itemSpawnPoint > 0) {
+                mBonusItem.bbox = Rectangle(Vec2D(startingX + tile->offset.GetX(), layoutOffset.GetY() + tile->offset.GetY()),SPRITE_WIDTH,SPRITE_HEIGHT);
             }
 
             if(tile->excludePelletTile > 0) {
@@ -335,6 +393,46 @@ bool PacmanLevel::loadLevel(const std::string& levelPath) {
     };
 
     fileCommandLoader.addCommand(layoutCommand);
+
+    Command bonusItemCommand;
+    bonusItemCommand.command = "bonus_item";
+    bonusItemCommand.parseFunc = [this](ParseFuncParams params) {
+        mBonusItemProperties.push_back(BonusItemLevelProperties());
+    };
+
+    fileCommandLoader.addCommand(bonusItemCommand);
+
+    Command bonusItemSpriteNameCommand;
+    bonusItemSpriteNameCommand.command = "bonus_item_sprite_name";
+    bonusItemSpriteNameCommand.parseFunc = [this](ParseFuncParams params) {
+        mBonusItemProperties.back().spriteName = FileCommandLoader::readString(params);
+    };
+
+    fileCommandLoader.addCommand(bonusItemSpriteNameCommand);
+
+    Command bonusItemScoreCommand;
+    bonusItemScoreCommand.command = "bonus_item_score";
+    bonusItemScoreCommand.parseFunc = [this](ParseFuncParams params) {
+        mBonusItemProperties.back().score = FileCommandLoader::readInt(params);
+    };
+
+    fileCommandLoader.addCommand(bonusItemScoreCommand);
+
+    Command bonusItemBeginLevelCommand;
+    bonusItemBeginLevelCommand.command = "bonus_item_begin_level";
+    bonusItemBeginLevelCommand.parseFunc = [this](ParseFuncParams params) {
+        mBonusItemProperties.back().begin = FileCommandLoader::readInt(params);
+    };
+
+    fileCommandLoader.addCommand(bonusItemBeginLevelCommand);
+
+    Command bonusItemEndLevelCommand;
+    bonusItemEndLevelCommand.command = "bonus_item_end_level";
+    bonusItemEndLevelCommand.parseFunc = [this](ParseFuncParams params) {
+        mBonusItemProperties.back().end = FileCommandLoader::readInt(params);
+    };
+
+    fileCommandLoader.addCommand(bonusItemEndLevelCommand);
 
 
     return fileCommandLoader.loadFile(levelPath);

@@ -8,8 +8,10 @@
 #include "../../Utils/vec2D.h"
 #include "../BreakOut/Excluder.h"
 #include "PacmanGameUtils.h"
+#include "../../graphics/SpriteSheet.h"
 #include <string>
 #include <vector>
+#include <random>
 
 class Screen;
 class Pacman;
@@ -17,7 +19,7 @@ class Pacman;
 class PacmanLevel {
 public:
 
-    bool init(const std::string& levelPath, Pacman* noptrPacman);
+    bool init(const std::string& levelPath, const SpriteSheet* noptrSpriteSheet, Pacman* noptrPacman);
     void update(uint32_t dt);
     void draw(Screen& screen);
 
@@ -41,6 +43,7 @@ private:
         int isTeleportTile = 0;
         int excludePelletTile = 0;
         int pacmanSpawnPoint = 0;
+        int itemSpawnPoint = 0;
         char teleportToSymbol = 0;
         char symbol = '-';
 
@@ -53,12 +56,36 @@ private:
         int eaten = 0;
     };
 
+    struct BonusItem {
+        uint32_t score = 0;
+        Rectangle bbox;
+        int eaten = 0;
+        int spawned = 0;
+        int spawnTime = -1;
+    };
+
+    struct BonusItemLevelProperties {
+        uint32_t score = 0;
+        std::string spriteName = "";
+        uint32_t begin = 0; // which levels do they spawn at
+        uint32_t end = 0;
+    };
+
     bool loadLevel(const std::string& levelPath);
     Tile* getTileForSymvbol(char symbol);
     void resetPellets();
     bool hasEatenAllPellets() const;
-
     size_t numPelletsEaten() const;
+
+    void getBonusItemSpriteName(std::string& spriteName, uint32_t& score) const;
+    void spawnBonusItem();
+    bool shouldSpawnBonusItem() const;
+
+    std::default_random_engine mGenerator;
+    BonusItem mBonusItem;
+    std::string mBonusItemSpriteName;
+    const SpriteSheet* mnoptrSpriteSheet;
+    std::vector<BonusItemLevelProperties> mBonusItemProperties;
 
     std::vector<Excluder> mWalls;
     std::vector<Tile> mTiles;
@@ -70,6 +97,7 @@ private:
     Vec2D mLayoutOffset;
     size_t mTileHeight;
     int mCurrentLevel;
+
 
     Pacman* mnoptrPacman;
 };

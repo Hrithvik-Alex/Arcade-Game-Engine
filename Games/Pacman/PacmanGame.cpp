@@ -16,7 +16,7 @@ void PacmanGame::init(GameController& gameController) {
     mPacmanSpriteSheet.load("PacmanSprites");
     mPacman.init(mPacmanSpriteSheet, App::Singleton().getBasePath() + "../Assets/Pacman_animations.txt", Vec2D::Zero, PACMAN_MOVEMENT_SPEED, false);
 
-    mLevel.init(App::Singleton().getBasePath() + "../Assets/Pacman_level.txt", &mPacman);
+    mLevel.init(App::Singleton().getBasePath() + "../Assets/Pacman_level.txt", &mPacmanSpriteSheet, &mPacman);
 
 
     resetGame();
