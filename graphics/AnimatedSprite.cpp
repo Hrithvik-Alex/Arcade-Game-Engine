@@ -28,14 +28,7 @@ void AnimatedSprite::draw(Screen& theScreen, bool rotate, float angle) {
         frameColor = mColor;
     }
 
-    if(rotate) {
-        Sprite currentSprite = mnoptrSpriteSheet->getSprite(frame.frame);
-        Vec2D centerOfSprite = mPosition + frame.offset + Vec2D(currentSprite.width/2,currentSprite.height/2);
-        theScreen.Draw(*mnoptrSpriteSheet, frame.frame, mPosition + frame.offset, frameColor, true, angle, centerOfSprite);
-    } else {
-        theScreen.Draw(*mnoptrSpriteSheet, frame.frame, mPosition + frame.offset, frameColor);
-    }
-
+    theScreen.Draw(*mnoptrSpriteSheet, frame.frame, mPosition + frame.offset, frameColor, rotate, angle);
 
     if(frame.overlay.size() > 0) {
         theScreen.Draw(*mnoptrSpriteSheet, frame.overlay, mPosition + frame.offset, frame.overlayColor);

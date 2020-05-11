@@ -40,7 +40,7 @@ public:
 private:
 
     static const int SHIP_VELOCITY = 100;
-    const Vec2D THRUSTER_OFFSET = {0,10.5};
+    const Vec2D THRUSTER_OFFSET = {0,15};
     AnimatedSprite mSpaceShipSprite;
     AnimatedSprite mThrusterSprite;
     Vec2D mOffset;

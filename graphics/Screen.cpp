@@ -140,7 +140,7 @@ void Screen::clearScreen() {
     }
 }
 
-void Screen::fillPoly(const std::vector<Vec2D>& points, FillPolyFunc func, bool rotate, float rotateAngle, Vec2D centerPoint) {
+void Screen::fillPoly(const std::vector<Vec2D>& points, FillPolyFunc func) {
     if(points.size() > 0) {
         float top = points[0].GetY();
         float bottom = points[0].GetY();
@@ -201,14 +201,9 @@ void Screen::fillPoly(const std::vector<Vec2D>& points, FillPolyFunc func, bool 
                     }
 
                     for(int pixelX = round(nodeXVec[k]); pixelX < round(nodeXVec[k+1]); ++pixelX) {
-                        if(rotate) {
-                            Vec2D currentPoint = {static_cast<float>(pixelX), static_cast<float>(pixelY)};
-                            Vec2D rotatedPoint = currentPoint.RotateResult(rotateAngle, centerPoint);
-                            Draw(rotatedPoint, func(pixelX, pixelY));
 
-                        } else {
-                            Draw(pixelX, pixelY, func(pixelX, pixelY));
-                        }
+                        Draw(pixelX, pixelY, func(pixelX, pixelY));
+
                     }
                 }
             }
@@ -352,7 +347,7 @@ void Screen::Draw(const Circle& circle, const Color& color,  bool fill, const Co
 
 }
 
-void Screen::Draw(const BMPImage& image, const Sprite& sprite, const Vec2D& pos, const Color& overlayColor, bool rotate, float rotateAngle, Vec2D centerPoint) {
+void Screen::Draw(const BMPImage& image, const Sprite& sprite, const Vec2D& pos, const Color& overlayColor, bool rotate, float rotateAngle) {
 
     float rVal = static_cast<float>(overlayColor.GetRed()) / 255.0f;
     float gVal = static_cast<float>(overlayColor.GetGreen()) / 255.0f;
@@ -370,15 +365,22 @@ void Screen::Draw(const BMPImage& image, const Sprite& sprite, const Vec2D& pos,
     auto bottomRight = pos + Vec2D(width, height);
 
     std::vector<Vec2D> points = {topLeft, bottomLeft, bottomRight, topRight};
+    Vec2D center = pos + Vec2D(width/2.0f,height/2.0f);
 
-    Vec2D xAxis = topRight - topLeft;
-    Vec2D yAxis = bottomLeft - topLeft;
+    if(rotate) {
+        for(int i = 0; i < points.size(); ++i) {
+            points[i].Rotate(rotateAngle, center);
+        }
+    }
+
+    Vec2D xAxis = points[3] - points[0];
+    Vec2D yAxis = points[1] - points[0];
 
     const float invXAxisLengthSq = 1.0f / xAxis.Mag2();
     const float invYAxisLengthSq = 1.0f / yAxis.Mag2();
     fillPoly(points, [&](uint32_t px, uint32_t py){
         Vec2D p = {static_cast<float>(px), static_cast<float>(py)};
-        Vec2D d = p - topLeft;
+        Vec2D d = p - points[0];
 
         float u = invXAxisLengthSq * d.Dot(xAxis);
         float v = invYAxisLengthSq * d.Dot(yAxis);
@@ -389,18 +391,16 @@ void Screen::Draw(const BMPImage& image, const Sprite& sprite, const Vec2D& pos,
         float tx = roundf(u * static_cast<float>(sprite.width));
         float ty = roundf(v * static_cast<float>(sprite.height));
 
-        Color imageColor = pixels[GetIndex(image.getWidth(),ty+sprite.yPos,tx + sprite.xPos)];
+        Color imageColor = pixels[GetIndex(image.getWidth(), static_cast<int>(ty) + sprite.yPos, static_cast<int>(tx) + sprite.xPos)];
         Color newColor = {static_cast<uint8_t>(imageColor.GetRed() * rVal), static_cast<uint8_t>(imageColor.GetGreen() * gVal), static_cast<uint8_t>(imageColor.GetBlue() * bVal), static_cast<uint8_t>(imageColor.GetAplha() * aVal)};
 
         return newColor;
-
-
-    }, rotate, rotateAngle, centerPoint);
+    });
 
 }
 
-void Screen::Draw(const SpriteSheet& ss, const std::string& spriteName, const Vec2D& pos, const Color& overlayColor, bool rotate, float rotateAngle, Vec2D centerPoint) {
-    Draw(ss.getBMPImage(), ss.getSprite(spriteName),pos,overlayColor,rotate,rotateAngle,centerPoint);
+void Screen::Draw(const SpriteSheet& ss, const std::string& spriteName, const Vec2D& pos, const Color& overlayColor, bool rotate, float rotateAngle) {
+    Draw(ss.getBMPImage(), ss.getSprite(spriteName),pos,overlayColor,rotate,rotateAngle);
 }
 
 void Screen::Draw(const BitmapFont& font, const std::string& textLine, const Vec2D& pos, const Color& overlayColor) {

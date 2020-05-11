@@ -47,8 +47,8 @@ public:
     void Draw(const Triangle& triangle, const Color& color, bool fill = false, const Color& fillColor = Color::White());
     void Draw(const Rectangle& rectangle, const Color& color, bool fill = false, const Color& fillColor = Color::White());
     void Draw(const Circle& circle, const Color& color, bool fill = false, const Color& fillColor = Color::White());
-    void Draw(const BMPImage& image, const Sprite& sprite, const Vec2D& pos, const Color& overlayColor = Color::White(), bool rotate = false, float rotateAngle = 0, Vec2D centerPoint = Vec2D::Zero);
-    void Draw(const SpriteSheet& ss, const std::string& spriteName, const Vec2D& pos, const Color& overlayColor = Color::White(), bool rotate = false, float rotateAngle = 0, Vec2D centerPoint = Vec2D::Zero);
+    void Draw(const BMPImage& image, const Sprite& sprite, const Vec2D& pos, const Color& overlayColor = Color::White(), bool rotate = false, float rotateAngle = 0);
+    void Draw(const SpriteSheet& ss, const std::string& spriteName, const Vec2D& pos, const Color& overlayColor = Color::White(), bool rotate = false, float rotateAngle = 0);
     void Draw(const BitmapFont& font, const std::string& textLine, const Vec2D& pos, const Color& overlayColor = Color::White());
 
 private:
@@ -61,7 +61,7 @@ private:
 
     using FillPolyFunc = std::function<Color (uint32_t x, uint32_t y)>;
 
-    void fillPoly(const std::vector<Vec2D>& points, FillPolyFunc func, bool rotate = false, float rotateAngle = 0, Vec2D centerPoint = Vec2D::Zero);
+    void fillPoly(const std::vector<Vec2D>& points, FillPolyFunc func);
 
     uint32_t mWidth;
     uint32_t mHeight;

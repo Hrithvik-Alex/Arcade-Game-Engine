@@ -57,8 +57,7 @@ void Asteroid::update(uint32_t dt) {
 
 void Asteroid::draw(Screen& screen) {
     assert(mSpriteName != "");
-    Vec2D centerSprite = Vec2D(mSpriteSheet->getSprite(mSpriteName).width/2, mSpriteSheet->getSprite(mSpriteName).height/2) + mPosition;
-    screen.Draw(*mSpriteSheet, mSpriteName, mPosition, Color::White(), true, mCurrentAngle, centerSprite);
+    screen.Draw(*mSpriteSheet, mSpriteName, mPosition, Color::White(), true, mCurrentAngle);
 }
 
 Vec2D Asteroid::calculateRandomStart() {

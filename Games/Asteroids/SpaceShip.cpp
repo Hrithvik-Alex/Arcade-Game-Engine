@@ -33,11 +33,6 @@ void SpaceShip::init(SpriteSheet* spriteSheet) {
 
     mSpaceShipSprite.setPosition(spaceshipCenter);
 
-    std::cout << mSpaceShipSprite.getBBox().getCenter() << std::endl;
-    Vec2D thrusterPosition = THRUSTER_OFFSET + mSpaceShipSprite.getBBox().getCenter();
-
-    mThrusterSprite.setPosition(thrusterPosition);
-
     mOffset = spaceshipCenter;
 }
 
@@ -63,7 +58,7 @@ void SpaceShip::update(uint32_t dt) {
         float distance = MilliSecondsToSeconds(dt) * SHIP_VELOCITY;
         mOffset += mDirection * distance;
         mSpaceShipSprite.setPosition(mOffset);
-        mThrusterSprite.setPosition((mSpaceShipSprite.getBBox().getCenter() + THRUSTER_OFFSET).RotateResult(mCurrentAngle,getBBox().getCenter()));
+        mThrusterSprite.setPosition((mSpaceShipSprite.getBBox().getCenter() + THRUSTER_OFFSET).RotateResult(mCurrentAngle,getBBox().getCenter()) - mThrusterSprite.size()/2);
 
         if(mOffset.GetX() < 0) {
             mOffset += Vec2D(App::Singleton().width(), 0);
