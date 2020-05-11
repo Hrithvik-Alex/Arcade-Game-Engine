@@ -18,7 +18,7 @@ void PacmanGame::init(GameController& gameController) {
     mPacmanSpriteSheet.load("PacmanSprites");
     mPacman.init(mPacmanSpriteSheet, App::Singleton().getBasePath() + "../Assets/Pacman_animations.txt", Vec2D::Zero, PACMAN_MOVEMENT_SPEED, false);
 
-    mLevel.init(App::Singleton().getBasePath() + "../Assets/Pacman_level.txt", &mPacmanSpriteSheet, &mPacman);
+    mLevel.init(App::Singleton().getBasePath() + "../Assets/Pacman_level.txt", &mPacmanSpriteSheet);
 
     setupGhosts();
     resetGame();
@@ -55,7 +55,7 @@ void PacmanGame::init(GameController& gameController) {
 void PacmanGame::update(uint32_t dt) {
     updatePacmanMovement();
     mPacman.update(dt);
-    mLevel.update(dt);
+    mLevel.update(dt, mPacman, mGhosts);
 
     for(size_t i = 0; i < NUM_GHOSTS; ++i) {
         mGhosts[i].update(dt);
@@ -63,6 +63,7 @@ void PacmanGame::update(uint32_t dt) {
 
     if(mLevel.isLevelOver()) {
         mLevel.increaseLevel();
+        resetLevel();
     }
 }
 
@@ -117,6 +118,12 @@ void PacmanGame::resetGame() {
     mPressedDirection = PACMAN_MOVEMENT_NONE;
     mPacman.resetScore();
     mLevel.resetToFirstLevel();
+    resetLevel();
+}
+
+void PacmanGame::resetLevel() {
+    mPacman.moveTo(mLevel.getPacmanSpawnLocation());
+    mPacman.resetToFirstAnimation();
 }
 
 void PacmanGame::updatePacmanMovement() {

@@ -21,6 +21,7 @@ public:
 private:
 
     void resetGame();
+    void resetLevel();
     void updatePacmanMovement();
     void handleGameControllerState(uint32_t dt, InputState state, PacmanMovement direction);
     void drawLives(Screen& screen);

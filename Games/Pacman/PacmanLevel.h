@@ -15,12 +15,13 @@
 
 class Screen;
 class Pacman;
+class Ghost;
 
 class PacmanLevel {
 public:
 
-    bool init(const std::string& levelPath, const SpriteSheet* noptrSpriteSheet, Pacman* noptrPacman);
-    void update(uint32_t dt);
+    bool init(const std::string& levelPath, const SpriteSheet* noptrSpriteSheet);
+    void update(uint32_t dt, Pacman& pacman, std::vector<Ghost>& ghosts);
     void draw(Screen& screen);
 
     bool willCollide(const Rectangle& bbox, PacmanMovement direction) const;
@@ -105,7 +106,6 @@ private:
     int mCurrentLevel;
 
 
-    Pacman* mnoptrPacman;
 };
 
 
