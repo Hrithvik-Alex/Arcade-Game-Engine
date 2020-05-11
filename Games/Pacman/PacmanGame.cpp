@@ -20,7 +20,7 @@ void PacmanGame::init(GameController& gameController) {
 
     mLevel.init(App::Singleton().getBasePath() + "../Assets/Pacman_level.txt", &mPacmanSpriteSheet, &mPacman);
 
-
+    setupGhosts();
     resetGame();
 
     ButtonAction leftAction;
@@ -57,6 +57,10 @@ void PacmanGame::update(uint32_t dt) {
     mPacman.update(dt);
     mLevel.update(dt);
 
+    for(size_t i = 0; i < NUM_GHOSTS; ++i) {
+        mGhosts[i].update(dt);
+    }
+
     if(mLevel.isLevelOver()) {
         mLevel.increaseLevel();
     }
@@ -65,6 +69,10 @@ void PacmanGame::update(uint32_t dt) {
 void PacmanGame::draw(Screen& screen) {
     mLevel.draw(screen);
     mPacman.draw(screen);
+
+    for(auto& ghost : mGhosts) {
+        ghost.draw(screen);
+    }
 
     //Draw Score
     {
@@ -125,4 +133,28 @@ void PacmanGame::handleGameControllerState(uint32_t dt, InputState state, Pacman
     } else if(GameController::IsReleased(state) && mPressedDirection == direction) {
         mPressedDirection = PACMAN_MOVEMENT_NONE;
     }
+}
+
+void PacmanGame::setupGhosts() {
+    mGhosts.resize(NUM_GHOSTS);
+
+    Ghost blinky;
+    blinky.init(mPacmanSpriteSheet, App::Singleton().getBasePath() + "../Assets/Ghost_animations.txt", mLevel.getGhostSpawnPoints()[BLINKY], GHOST_MOVEMENT_SPEED, true, Color::Red());
+    blinky.setMovementDirection(PACMAN_MOVEMENT_LEFT);
+    mGhosts[BLINKY] = blinky;
+
+    Ghost pinky;
+    pinky.init(mPacmanSpriteSheet, App::Singleton().getBasePath() + "../Assets/Ghost_animations.txt", mLevel.getGhostSpawnPoints()[PINKY], GHOST_MOVEMENT_SPEED, true, Color::Pink());
+    pinky.setMovementDirection(PACMAN_MOVEMENT_DOWN);
+    mGhosts[PINKY] = pinky;
+
+    Ghost inky;
+    inky.init(mPacmanSpriteSheet, App::Singleton().getBasePath() + "../Assets/Ghost_animations.txt", mLevel.getGhostSpawnPoints()[INKY], GHOST_MOVEMENT_SPEED, true, Color::Cyan());
+    inky.setMovementDirection(PACMAN_MOVEMENT_UP);
+    mGhosts[INKY] = inky;
+
+    Ghost clyde;
+    clyde.init(mPacmanSpriteSheet, App::Singleton().getBasePath() + "../Assets/Ghost_animations.txt", mLevel.getGhostSpawnPoints()[CLYDE], GHOST_MOVEMENT_SPEED, true, Color::Orange());
+    clyde.setMovementDirection(PACMAN_MOVEMENT_RIGHT);
+    mGhosts[CLYDE] = clyde;
 }

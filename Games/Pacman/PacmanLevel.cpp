@@ -9,6 +9,7 @@
 #include "../../graphics/Screen.h"
 #include "../../App/App.h"
 #include "../../shapes/Circle.h"
+#include "Ghost.h"
 #include <cassert>
 
 namespace {
@@ -24,6 +25,7 @@ bool PacmanLevel::init(const std::string& levelPath, const SpriteSheet* noptrSpr
     mBonusItemSpriteName = "";
     std::random_device r;
     mGenerator.seed(r());
+    mGhostSpawnPoints.resize(NUM_GHOSTS);
 
     bool levelLoaded = loadLevel(levelPath);
     if(levelLoaded) {
@@ -356,6 +358,39 @@ bool PacmanLevel::loadLevel(const std::string& levelPath) {
 
     fileCommandLoader.addCommand(tileItemSpawnPointCommand);
 
+    Command tileBlinkySpawnPointCommand;
+    tileBlinkySpawnPointCommand.command = "tile_blinky_spawn_point";
+    tileBlinkySpawnPointCommand.parseFunc = [this](ParseFuncParams params) {
+        mTiles.back().blinkySpawnPoint = FileCommandLoader::readInt(params);
+    };
+
+    fileCommandLoader.addCommand(tileBlinkySpawnPointCommand);
+
+    Command tilePinkySpawnPointCommand;
+    tilePinkySpawnPointCommand.command = "tile_pinky_spawn_point";
+    tilePinkySpawnPointCommand.parseFunc = [this](ParseFuncParams params) {
+        mTiles.back().pinkySpawnPoint = FileCommandLoader::readInt(params);
+    };
+
+    fileCommandLoader.addCommand(tilePinkySpawnPointCommand);
+
+    Command tileInkySpawnPointCommand;
+    tileInkySpawnPointCommand.command = "tile_inky_spawn_point";
+    tileInkySpawnPointCommand.parseFunc = [this](ParseFuncParams params) {
+        mTiles.back().inkySpawnPoint = FileCommandLoader::readInt(params);
+    };
+
+    fileCommandLoader.addCommand(tileInkySpawnPointCommand);
+
+    Command tileClydeSpawnPointCommand;
+    tileClydeSpawnPointCommand.command = "tile_clyde_spawn_point";
+    tileClydeSpawnPointCommand.parseFunc = [this](ParseFuncParams params) {
+        mTiles.back().clydeSpawnPoint = FileCommandLoader::readInt(params);
+    };
+
+    fileCommandLoader.addCommand(tileClydeSpawnPointCommand);
+
+
     Command layoutCommand;
     layoutCommand.command = "layout";
     layoutCommand.commandType = COMMAND_MULTI_LINE;
@@ -376,10 +411,20 @@ bool PacmanLevel::loadLevel(const std::string& levelPath) {
                 mWalls.push_back(wall);
             }
 
+            Vec2D currentPosition = Vec2D(startingX + tile->offset.GetX(), layoutOffset.GetY() + tile->offset.GetY());
+
             if(tile->pacmanSpawnPoint > 0) {
-                mPacmanSpawnLocation = Vec2D(startingX + tile->offset.GetX(), layoutOffset.GetY() + tile->offset.GetY());
+                mPacmanSpawnLocation = currentPosition;
             } else if(tile->itemSpawnPoint > 0) {
-                mBonusItem.bbox = Rectangle(Vec2D(startingX + tile->offset.GetX(), layoutOffset.GetY() + tile->offset.GetY()),SPRITE_WIDTH,SPRITE_HEIGHT);
+                mBonusItem.bbox = Rectangle(currentPosition,SPRITE_WIDTH,SPRITE_HEIGHT);
+            } else if(tile->blinkySpawnPoint > 0) {
+                mGhostSpawnPoints[BLINKY] = currentPosition;
+            } else if(tile->pinkySpawnPoint > 0) {
+                mGhostSpawnPoints[PINKY] = currentPosition;
+            } else if(tile->inkySpawnPoint > 0) {
+                mGhostSpawnPoints[INKY] = currentPosition;
+            } else if(tile->clydeSpawnPoint > 0) {
+                mGhostSpawnPoints[CLYDE] = currentPosition;
             }
 
             if(tile->excludePelletTile > 0) {

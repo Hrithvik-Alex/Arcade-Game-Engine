@@ -31,8 +31,9 @@ public:
     bool isLevelOver() const;
     void increaseLevel();
     void resetToFirstLevel();
-
     void resetLevel();
+
+    inline const std::vector<Vec2D>& getGhostSpawnPoints() {return mGhostSpawnPoints;}
 
 private:
     struct Tile {
@@ -43,6 +44,10 @@ private:
         int isTeleportTile = 0;
         int excludePelletTile = 0;
         int pacmanSpawnPoint = 0;
+        int blinkySpawnPoint = 0;
+        int inkySpawnPoint = 0;
+        int pinkySpawnPoint = 0;
+        int clydeSpawnPoint = 0;
         int itemSpawnPoint = 0;
         char teleportToSymbol = 0;
         char symbol = '-';
@@ -81,6 +86,7 @@ private:
     void spawnBonusItem();
     bool shouldSpawnBonusItem() const;
 
+    std::vector<Vec2D> mGhostSpawnPoints;
     std::default_random_engine mGenerator;
     BonusItem mBonusItem;
     std::string mBonusItemSpriteName;

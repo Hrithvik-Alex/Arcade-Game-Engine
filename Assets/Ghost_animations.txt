@@ -1,0 +1,138 @@
+:animation ghost_movement_left
+:sprite_sheet PacmanSprites
+:size 16 16
+:fps 8
+
+:overlay ghost_eyes_left
+
+:frame_keys 2
+
+ghost_body_0
+ghost_body_1
+
+:animation ghost_movement_right
+:sprite_sheet PacmanSprites
+:size 16 16
+:fps 8
+
+:overlay ghost_eyes_right
+
+:frame_keys 2
+
+ghost_body_0
+ghost_body_1
+
+:animation ghost_movement_up
+:sprite_sheet PacmanSprites
+:size 16 16
+:fps 8
+
+:overlay ghost_eyes_up
+
+:frame_keys 2
+
+ghost_body_0
+ghost_body_1
+
+:animation ghost_movement_down
+:sprite_sheet PacmanSprites
+:size 16 16
+:fps 8
+
+:overlay ghost_eyes_down
+
+:frame_keys 2
+
+ghost_body_0
+ghost_body_1
+
+:animation ghost_vulnerable
+:sprite_sheet PacmanSprites
+:size 16 16
+:fps 5
+
+:overlay ghost_vulnerable_face
+
+:frame_keys 2
+
+ghost_body_0
+ghost_body_1
+
+:frame_colors 2
+
+0 0 255 255
+0 0 255 255
+
+:animation ghost_vulnerable_ending
+:sprite_sheet PacmanSprites
+:size 16 16
+:fps 5
+
+:overlay ghost_vulnerable_face
+
+:frame_keys 2
+
+ghost_body_0
+ghost_body_1
+
+:frame_colors 2
+
+255 255 255 255
+0 0 255 255
+
+:overlay_colors 2
+
+255 0 0 255
+255 255 255 255
+
+:animation ghost_dead_left
+:sprite_sheet PacmanSprites
+:size 16 16
+:fps 10
+
+:frame_keys 1
+
+ghost_eyes_left
+
+:frame_colors 1
+
+255 255 255 255
+
+:animation ghost_dead_right
+:sprite_sheet PacmanSprites
+:size 16 16
+:fps 10
+
+:frame_keys 1
+
+ghost_eyes_right
+
+:frame_colors 1
+
+255 255 255 255
+
+:animation ghost_dead_up
+:sprite_sheet PacmanSprites
+:size 16 16
+:fps 10
+
+:frame_keys 1
+
+ghost_eyes_up
+
+:frame_colors 1
+
+255 255 255 255
+
+:animation ghost_dead_down
+:sprite_sheet PacmanSprites
+:size 16 16
+:fps 10
+
+:frame_keys 1
+
+ghost_eyes_down
+
+:frame_colors 1
+
+255 255 255 255

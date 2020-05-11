@@ -10,6 +10,7 @@
 #include "Pacman.h"
 #include "../../graphics/SpriteSheet.h"
 #include "../../Input/InputAction.h"
+#include "Ghost.h"
 
 class PacmanGame: public Game {
 public:
@@ -23,13 +24,14 @@ private:
     void updatePacmanMovement();
     void handleGameControllerState(uint32_t dt, InputState state, PacmanMovement direction);
     void drawLives(Screen& screen);
+    void setupGhosts();
 
     PacmanMovement mPressedDirection;
     SpriteSheet mPacmanSpriteSheet;
     Pacman mPacman;
     PacmanLevel mLevel;
     size_t mNumLives;
-
+    std::vector<Ghost> mGhosts;
 };
 
 
