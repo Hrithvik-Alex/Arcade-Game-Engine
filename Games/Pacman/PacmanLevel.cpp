@@ -127,10 +127,11 @@ void PacmanLevel::update(uint32_t dt, Pacman& pacman, std::vector<Ghost>& ghosts
 
 void PacmanLevel::draw(Screen& screen) {
 
-    // wall debug
-    for(const auto& wall: mWalls) {
-        screen.Draw(wall.getRectangle(), Color::Blue());
-    }
+   Sprite bgSprite;
+   bgSprite.width = mBGImage.getWidth();
+   bgSprite.height = mBGImage.getHeight();
+
+   screen.Draw(mBGImage, bgSprite, Vec2D::Zero);
 
     for(const auto& pellet: mPelllets) {
         if(!pellet.eaten) {
@@ -321,6 +322,18 @@ void PacmanLevel::resetPellets() {
 bool PacmanLevel::loadLevel(const std::string& levelPath) {
 
     FileCommandLoader fileCommandLoader;
+
+    std::string bgImageName;
+
+    Command bgImageCommand;
+    bgImageCommand.command = "bg_image";
+    bgImageCommand.parseFunc = [this, &bgImageName](ParseFuncParams params) {
+        bgImageName = FileCommandLoader::readString(params);
+        bool loaded = mBGImage.load(App::Singleton().getBasePath() + std::string("../Assets/") + bgImageName);
+        assert(loaded && "didn't load the bg image");
+    };
+
+    fileCommandLoader.addCommand(bgImageCommand);
 
     Command tileWidthCommand;
     tileWidthCommand.command = "tile_width";

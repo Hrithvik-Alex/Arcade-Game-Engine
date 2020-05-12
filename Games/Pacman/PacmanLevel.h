@@ -91,6 +91,7 @@ private:
     void spawnBonusItem();
     bool shouldSpawnBonusItem() const;
 
+    BMPImage mBGImage;
     std::vector<Vec2D> mGhostSpawnPoints;
     std::default_random_engine mGenerator;
     BonusItem mBonusItem;

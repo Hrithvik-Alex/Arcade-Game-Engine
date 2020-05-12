@@ -57,6 +57,16 @@ void PacmanGame::init(GameController& gameController) {
         handleGameControllerState(dt,state,PACMAN_MOVEMENT_DOWN);
     };
     gameController.addInputActionForKey(downAction);
+
+    ButtonAction backAction;
+    backAction.key = GameController::CancelKey();
+    backAction.action = [this](uint32_t dt, InputState state) {
+        if(mGameState == GAME_OVER && GameController::IsPressed(state)) {
+            App::Singleton().popScene();
+        }
+    };
+
+    gameController.addInputActionForKey(backAction);
 }
 
 void PacmanGame::update(uint32_t dt) {
@@ -135,9 +145,10 @@ void PacmanGame::draw(Screen& screen) {
         ghost.draw(screen);
     }
 
-    for(auto& ghostAI : mGhostAIs) {
-        ghostAI.draw(screen);
-    }
+    //purely for debug;
+//    for(auto& ghostAI : mGhostAIs) {
+//        ghostAI.draw(screen);
+//    }
 
     const auto& font = App::Singleton().getFont();
     Vec2D textDrawPosition;
@@ -196,6 +207,7 @@ void PacmanGame::resetGame() {
 
 void PacmanGame::resetLevel() {
 
+    mReleaseGhostTimer = 0;
     mGameState = LEVEL_STARTING;
     mPacman.moveTo(mLevel.getPacmanSpawnLocation());
     mPacman.resetToFirstAnimation();

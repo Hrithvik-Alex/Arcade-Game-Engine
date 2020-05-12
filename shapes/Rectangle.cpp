@@ -49,7 +49,7 @@ bool Rectangle::contains(const Vec2D& point) const {
 }
 
 Rectangle Rectangle::inset(const Rectangle& rect,const Vec2D& insets) {
-    return Rectangle(rect.getTopLeftPoint() + insets, Vec2D(rect.getWidth() - 2*insets.GetX(), rect.getHeight() - 2*insets.GetY()));
+    return Rectangle(rect.getTopLeftPoint() + insets, rect.getWidth() - 2*insets.GetX(), rect.getHeight() - 2*insets.GetY());
 }
 
 std::vector<Vec2D> Rectangle::getPoints() const {
