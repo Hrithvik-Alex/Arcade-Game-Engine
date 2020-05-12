@@ -26,7 +26,7 @@ Vec2D getMovementVector(PacmanMovement direction);
 PacmanMovement getOppositeDirection(PacmanMovement direction);
 
 std::vector<PacmanMovement>  getPerpendicularMovements(PacmanMovement direction);
-
+std::vector<PacmanMovement> getOtherDirections(PacmanMovement direction);
 
 
 #endif //LINES_PACMANGAMEUTILS_H

@@ -9,6 +9,7 @@
 #include "../BreakOut/Excluder.h"
 #include "PacmanGameUtils.h"
 #include "../../graphics/SpriteSheet.h"
+#include "GhostAI.h"
 #include <string>
 #include <vector>
 #include <random>
@@ -21,10 +22,11 @@ class PacmanLevel {
 public:
 
     bool init(const std::string& levelPath, const SpriteSheet* noptrSpriteSheet);
-    void update(uint32_t dt, Pacman& pacman, std::vector<Ghost>& ghosts);
+    void update(uint32_t dt, Pacman& pacman, std::vector<Ghost>& ghosts, std::vector<GhostAI>& ghostAIs);
     void draw(Screen& screen);
 
     bool willCollide(const Rectangle& bbox, PacmanMovement direction) const;
+    bool willCollide(const Ghost& ghost, const GhostAI& ghostAI, PacmanMovement direction) const;
 
     inline Vec2D getLayoutOffset() const {return mLayoutOffset;}
     inline Vec2D getPacmanSpawnLocation() const {return mPacmanSpawnLocation;}
@@ -35,6 +37,7 @@ public:
     void resetLevel();
 
     inline const std::vector<Vec2D>& getGhostSpawnPoints() {return mGhostSpawnPoints;}
+    inline uint32_t getInGameTextYPos() const {return mBonusItem.bbox.getTopLeftPoint().GetY();}
 
 private:
     struct Tile {
@@ -50,6 +53,7 @@ private:
         int pinkySpawnPoint = 0;
         int clydeSpawnPoint = 0;
         int itemSpawnPoint = 0;
+        int isGate = 0;
         char teleportToSymbol = 0;
         char symbol = '-';
 
@@ -99,6 +103,8 @@ private:
 
     std::vector<Tile> mExclusionTiles;
     std::vector<Pellet> mPelllets;
+
+    std::vector<Excluder> mGates;
 
     Vec2D mPacmanSpawnLocation;
     Vec2D mLayoutOffset;

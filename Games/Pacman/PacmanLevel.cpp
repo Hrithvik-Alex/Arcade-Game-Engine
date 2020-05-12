@@ -34,7 +34,7 @@ bool PacmanLevel::init(const std::string& levelPath, const SpriteSheet* noptrSpr
     return levelLoaded;
 }
 
-void PacmanLevel::update(uint32_t dt, Pacman& pacman, std::vector<Ghost>& ghosts) {
+void PacmanLevel::update(uint32_t dt, Pacman& pacman, std::vector<Ghost>& ghosts, std::vector<GhostAI>& ghostAIs) {
     for(const auto& wall : mWalls) {
         BoundaryEdge edge;
 
@@ -51,6 +51,28 @@ void PacmanLevel::update(uint32_t dt, Pacman& pacman, std::vector<Ghost>& ghosts
                 ghost.stop();
             }
         }
+    }
+
+    for(const auto& gate : mGates) {
+        BoundaryEdge edge;
+
+        if(gate.hasCollided(pacman.getBoundingBox(), edge)){
+            Vec2D offset = gate.getCollisionOffset(pacman.getBoundingBox());
+            pacman.moveBy(offset);
+            pacman.stop();
+        }
+
+        for(size_t i = 0; i < NUM_GHOSTS; ++i) {
+            GhostAI& ghostAI = ghostAIs[i];
+            Ghost& ghost = ghosts[i];
+
+            if(!(ghostAI.wantsToLeavePen() || ghostAI.isEnteringPen()) && gate.hasCollided(ghost.getBoundingBox(), edge)) {
+                Vec2D offset = gate.getCollisionOffset(ghost.getBoundingBox());
+                ghost.moveBy(offset);
+                ghost.stop();
+            }
+        }
+
     }
 
     for(Tile t : mTiles) {
@@ -83,7 +105,9 @@ void PacmanLevel::update(uint32_t dt, Pacman& pacman, std::vector<Ghost>& ghosts
 
                 if(pellet.powerPellet) {
                     pacman.resetGhostEatenMultiplier();
-                    //TODO: make ghosts go vulnerable
+                    for(auto& ghost : ghosts) {
+                        ghost.setStateToVulnerable();
+                    }
                 }
             }
         }
@@ -127,13 +151,42 @@ void PacmanLevel::draw(Screen& screen) {
 bool PacmanLevel::willCollide(const Rectangle& bbox, PacmanMovement direction) const {
     Rectangle box = bbox;
     box.MoveBy(getMovementVector(direction));
-    for(const auto& wall : mWalls) {
-        BoundaryEdge edge;
+    BoundaryEdge edge;
 
+    for(const auto& wall : mWalls) {
+
+        if(wall.hasCollided(box, edge)) {
+            return true;
+        }
+    }
+
+    for(const auto& gate : mGates) {
+        if(gate.hasCollided(box, edge)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool PacmanLevel::willCollide(const Ghost &ghost, const GhostAI &ghostAI, PacmanMovement direction) const {
+    Rectangle bbox = ghost.getBoundingBox();
+
+    bbox.MoveBy(getMovementVector(direction));
+
+    BoundaryEdge edge;
+    for(const auto& wall : mWalls) {
         if(wall.hasCollided(bbox, edge)) {
             return true;
         }
     }
+
+    for(const auto& gate : mGates) {
+        if(!(ghostAI.isEnteringPen() || ghostAI.wantsToLeavePen()) && gate.hasCollided(bbox,edge)) {
+            return true;
+        }
+    }
+
     return false;
 }
 
@@ -400,6 +453,14 @@ bool PacmanLevel::loadLevel(const std::string& levelPath) {
 
     fileCommandLoader.addCommand(tileClydeSpawnPointCommand);
 
+    Command tileGateCommand;
+    tileGateCommand.command = "tile_is_gate";
+    tileGateCommand.parseFunc = [this](ParseFuncParams params) {
+        mTiles.back().isGate = FileCommandLoader::readInt(params);
+    };
+
+    fileCommandLoader.addCommand(tileGateCommand);
+
 
     Command layoutCommand;
     layoutCommand.command = "layout";
@@ -408,43 +469,50 @@ bool PacmanLevel::loadLevel(const std::string& levelPath) {
         int startingX = layoutOffset.GetX();
 
         for(int c = 0; c < params.line.length(); ++c) {
-            Tile* tile = getTileForSymvbol(params.line[c]);
+            Tile *tile = getTileForSymvbol(params.line[c]);
 
-            if(tile) {
+            if (tile) {
+
                 tile->position = Vec2D(startingX, layoutOffset.GetY());
+
+                if(tile->isGate > 0) {
+                    Excluder gate;
+                    gate.init(Rectangle(Vec2D(startingX, layoutOffset.GetY()), tile->width, static_cast<int>(mTileHeight)));
+                    mGates.push_back(gate);
+                } else if (tile->collidable > 0) {
+                    Excluder wall;
+                    wall.init(Rectangle(Vec2D(startingX, layoutOffset.GetY()), tile->width, static_cast<int>(mTileHeight)));
+
+                    mWalls.push_back(wall);
+                }
+
+                Vec2D currentPosition = Vec2D(startingX + tile->offset.GetX(),
+                                              layoutOffset.GetY() + tile->offset.GetY());
+
+                if (tile->pacmanSpawnPoint > 0) {
+                    mPacmanSpawnLocation = currentPosition;
+                } else if (tile->itemSpawnPoint > 0) {
+                    mBonusItem.bbox = Rectangle(currentPosition, SPRITE_WIDTH, SPRITE_HEIGHT);
+                } else if (tile->blinkySpawnPoint > 0) {
+                    mGhostSpawnPoints[BLINKY] = currentPosition+Vec2D(1,0);
+                } else if (tile->pinkySpawnPoint > 0) {
+                    mGhostSpawnPoints[PINKY] = currentPosition;
+                } else if (tile->inkySpawnPoint > 0) {
+                    mGhostSpawnPoints[INKY] = currentPosition+Vec2D(1,0);
+                } else if (tile->clydeSpawnPoint > 0) {
+                    mGhostSpawnPoints[CLYDE] = currentPosition;
+                }
+
+                if (tile->excludePelletTile > 0) {
+                    mExclusionTiles.push_back(*tile);
+                }
+
+                startingX += tile->width;
             }
 
-            if(tile->collidable > 0) {
-                Excluder wall;
-                wall.init(Rectangle(Vec2D(startingX, layoutOffset.GetY()), tile->width, static_cast<int>(mTileHeight)));
-
-                mWalls.push_back(wall);
-            }
-
-            Vec2D currentPosition = Vec2D(startingX + tile->offset.GetX(), layoutOffset.GetY() + tile->offset.GetY());
-
-            if(tile->pacmanSpawnPoint > 0) {
-                mPacmanSpawnLocation = currentPosition;
-            } else if(tile->itemSpawnPoint > 0) {
-                mBonusItem.bbox = Rectangle(currentPosition,SPRITE_WIDTH,SPRITE_HEIGHT);
-            } else if(tile->blinkySpawnPoint > 0) {
-                mGhostSpawnPoints[BLINKY] = currentPosition;
-            } else if(tile->pinkySpawnPoint > 0) {
-                mGhostSpawnPoints[PINKY] = currentPosition;
-            } else if(tile->inkySpawnPoint > 0) {
-                mGhostSpawnPoints[INKY] = currentPosition;
-            } else if(tile->clydeSpawnPoint > 0) {
-                mGhostSpawnPoints[CLYDE] = currentPosition;
-            }
-
-            if(tile->excludePelletTile > 0) {
-                mExclusionTiles.push_back(*tile);
-            }
-
-            startingX += tile->width;
         }
-
         layoutOffset += Vec2D(0, mTileHeight);
+
     };
 
     fileCommandLoader.addCommand(layoutCommand);
