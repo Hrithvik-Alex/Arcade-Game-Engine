@@ -8,3 +8,5 @@ Graphics and Text rendering and UI elements to name a few.
 Some Improvements that could be made are to move the rendering to a graphics API such as OpenGL, DirectX or Vulcan.
 
 In order to run this, you will also need SDL installed. the makefile given should allow you to run the rest.
+
+This project was created with help from the Udemy Course "Learn C++ and make video games pt 2".
